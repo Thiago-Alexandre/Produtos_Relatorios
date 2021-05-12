@@ -8,7 +8,7 @@ def insert(dict_values: dict):
         raise Exception("Registro inválido.")
 
 
-def read_all():
+def read_all() -> list:
     categorys = list(DB["category"].find())
     if categorys:
         return categorys
