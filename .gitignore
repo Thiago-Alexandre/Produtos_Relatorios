@@ -129,6 +129,14 @@ dmypy.json
 .pyre/
 .idea
 
+
+# -------- API Products: --------
 API_Products/.idea
+API_Products/database/auth.py
+
+
+# -------- API Reports: ---------
 API_Reports/.idea
+API_Reports/database/auth.py
+
 
