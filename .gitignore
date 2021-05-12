@@ -128,3 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .idea
+
+API_Products/.idea
+API_Reports/.idea
+
