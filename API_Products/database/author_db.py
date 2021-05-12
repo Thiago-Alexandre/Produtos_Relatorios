@@ -6,7 +6,7 @@ def insert_author(dict_values: dict):
     if dict_values:
         DB.author.insert_one(dict_values)
     else:
-        raise Exception("Registros inválidos")
+        raise Exception("Registros inválidos.")
 
 
 def read_all() -> list:
@@ -15,4 +15,4 @@ def read_all() -> list:
     if authors:
         return authors
     else:
-        raise Exception("nenhum autor encontrado")
+        raise Exception("Nenhum autor encontrado.")
