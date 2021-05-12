@@ -1,6 +1,3 @@
-from pymongo.cursor import Cursor
-
-
 def convert_object_to_str(object_cursor) -> list:
     list_cursor = []    
 
