@@ -9,9 +9,9 @@ def insert(dict_values: dict):
 
 
 def read_all() -> list:
-    categorys = list(DB["category"].find())
-    if categorys:
-        return categorys
+    categories = list(DB["category"].find())
+    if categories:
+        return categories
     else:
         raise Exception("Nenhuma categoria encontrada.")
 
