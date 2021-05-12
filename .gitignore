@@ -137,6 +137,4 @@ API_Products/database/auth.py
 
 # -------- API Reports: ---------
 API_Reports/.idea
-API_Reports/database/auth.py
-
 
