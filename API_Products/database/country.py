@@ -15,10 +15,10 @@ def get_country_name_list() -> list:
         if len(countries_db) > 0:
             result_data = [c["name"] for c in countries_db]
     except CollectionInvalid as error:
-        print(f"CollectionInvalid error: {error}")
+        raise Exception(f"CollectionInvalid error: {error}")
     except PyMongoError as error:
-        print(f"Other PyMongo error: {error}")
+        raise Exception(f"Other PyMongo error: {error}")
     except Exception as error:
-        print(f"Other error ocurred: {error}")
+        raise Exception(f"Other error ocurred: {error}")
 
     return result_data
