@@ -3,7 +3,7 @@ from additionals.functions import convert_object_id_to_string
 from .db import DB
 
 
-def insert_book(dict_values: dict):
+def insert_book_db(dict_values: dict):
 
     if dict_values:
         DB.book.insert_one(dict_values)
@@ -12,7 +12,7 @@ def insert_book(dict_values: dict):
         raise Exception("Registros inválidos.")
 
 
-def read_all() -> list:
+def read_all_books_db() -> list:
 
     book = DB.book.find()
     book_list = convert_object_id_to_string(book)
@@ -23,7 +23,7 @@ def read_all() -> list:
         raise Exception("Nenhum livro encontrado!")
 
 
-def isbn_exists(isbn_to_check: str) -> bool:
+def isbn_exists_db(isbn_to_check: str) -> bool:
     if not isinstance(isbn_to_check, str):
         return False
 
