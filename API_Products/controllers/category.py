@@ -12,9 +12,9 @@ def read_all_categories() -> dict:
 def insert_categories(dict_values: dict) -> dict:
 
     if dict_values["name"].strip() == "":
-        return dict(status=400, text=f"Valor inválido.")
+        return dict(status=400, text="Valor inválido.")
 
-    validate_category = db.DB["category"].count_documents({dict_values["name"]})
+    validate_category = db.DB["category"].count_documents(dict_values, {})
 
     if not validate_category > 0:
         try:
@@ -26,4 +26,3 @@ def insert_categories(dict_values: dict) -> dict:
     else:
         return dict(status=400, text="Categoria já cadastrada.")
 
-insert_categories(dict(name="Romance"))
