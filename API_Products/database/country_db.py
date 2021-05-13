@@ -4,22 +4,19 @@ from .db import DB
 
 
 # Returns a country name list or None if nothing is find:
-def get_country_name_list() -> list or None:
-    result_data = None
-
+def get_country_name_list_db() -> list or None:
     try:
         country = DB.country
 
-        countries_db = list(country.find({}, {"_id": 0}))
-        result_data = countries_db
+        result_data = list(country.find({}, {"_id": 0}))
+        if len(result_data) > 0:
+            return result_data
     except CollectionInvalid as error:
         raise Exception(f"CollectionInvalid error: {error}")
     except PyMongoError as error:
         raise Exception(f"Other PyMongo error: {error}")
     except Exception as error:
         raise Exception(f"Other error ocurred: {error}")
-
-    return result_data
 
 
 # Returns dict if country exists in database or None if not or throw exception:
