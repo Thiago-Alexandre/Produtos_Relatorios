@@ -1,4 +1,4 @@
-from additionals.functions import convert_object_id_to_string
+from API_Products.additionals.functions import convert_object_id_to_string
 from .db import DB
 
 
@@ -11,11 +11,11 @@ def insert(dict_values: dict) -> str:
 
 
 def read_all() -> list:
-    publishers  = DB.publisher.find()  
+    publishers = DB.publisher.find()
     publishers_list = convert_object_id_to_string(publishers)
     
     if publishers_list:
         return publishers_list
     else:
-        raise Exception ("Nenhuma editora encontrada !")      
+        raise Exception("Nenhuma editora encontrada !")
 
