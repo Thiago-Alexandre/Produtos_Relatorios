@@ -4,7 +4,7 @@ from .db import DB
 
 def insert(dict_values: dict) -> str:
     if dict_values:
-        DB["publisher"].insert_one(dict_values)#.inserted_id
+        DB["publisher"].insert_one(dict_values)
         return "Registro inserido com sucesso !"
     else:
         raise Exception("Registro inválido.")
