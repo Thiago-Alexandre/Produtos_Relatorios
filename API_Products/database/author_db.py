@@ -1,5 +1,5 @@
 from additionals.functions import convert_object_id_to_string
-from database.db import DB
+from .db import DB
 
 
 def insert_author(dict_values: dict):

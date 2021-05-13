@@ -1,4 +1,4 @@
-from API_Products.database import author_db, country_db
+from database import author_db, country_db
 
 
 def author_insert_validation(dict_values: dict):
