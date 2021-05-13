@@ -1,4 +1,5 @@
 from pymongo.errors import CollectionInvalid, PyMongoError
+from bson.regex import Regex
 
 from db import DB
 
