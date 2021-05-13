@@ -18,6 +18,3 @@ def populate_languages():
         print(f"PyMongo error: {error}")
     except Exception as error:
         print(f"Other error ocurred: {error}")
-
-
-populate_languages()
