@@ -1,4 +1,4 @@
-from additionals.functions import convert_object_to_str
+from additionals.functions import convert_object_id_to_string
 from .db import DB
 
 
