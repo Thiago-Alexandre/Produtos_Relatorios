@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+from pymongo.errors import CollectionInvalid, PyMongoError
 from additionals.functions import convert_object_id_to_string
-from db import DB
+from .db import DB
 
 
 def insert_book(dict_values: dict):
@@ -22,11 +22,6 @@ def read_all() -> list:
     else:
         raise Exception("Nenhum livro encontrado!")
 
-print(read_all())
-=======
-from database.db import DB
-from pymongo.errors import CollectionInvalid, PyMongoError
-
 
 def isbn_exists(isbn_to_check: str) -> bool:
     if not isinstance(isbn_to_check, str):
@@ -46,4 +41,4 @@ def isbn_exists(isbn_to_check: str) -> bool:
         raise Exception(f"CollectionInvalid error: {error.args[0]}")
     except PyMongoError as error:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
->>>>>>> 46c05f7952de2c84ee8e47dc362856fe16988f6c
+
