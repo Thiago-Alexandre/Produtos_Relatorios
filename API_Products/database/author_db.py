@@ -1,7 +1,7 @@
 from db import DB
 
 
-def insert_author(dict_values: dict):
+def insert_author_db(dict_values: dict):
 
     if dict_values:
         DB.author.insert_one(dict_values)
@@ -9,7 +9,7 @@ def insert_author(dict_values: dict):
         raise Exception("Registros inválidos.")
 
 
-def read_all() -> list:
+def read_all_authors_db() -> list:
 
     authors = list(DB.author.find())
     if authors:
