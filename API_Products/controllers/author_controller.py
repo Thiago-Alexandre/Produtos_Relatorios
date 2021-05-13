@@ -10,7 +10,7 @@ def author_insert_validation(dict_values: dict):
         else:
             dict(status=400, text="O país não foi encontrado!")
     except Exception as error:
-            return dict(status=400, text=error)
+            return dict(status=400, text=error.args[0])
 
 
 def author_read_all_validation():
