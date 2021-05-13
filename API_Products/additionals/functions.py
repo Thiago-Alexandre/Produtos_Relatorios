@@ -1,4 +1,4 @@
-def convert_object_to_str(object_cursor) -> list:
+def convert_object_id_to_string(object_cursor) -> list:
     list_cursor = []    
 
     for i in object_cursor:

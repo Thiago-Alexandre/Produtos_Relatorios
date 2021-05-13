@@ -12,7 +12,7 @@ def insert(dict_values: dict) -> str:
 
 def read_all() -> list:
     publishers  = DB.publisher.find()  
-    publishers_list = convert_object_to_str(publishers)
+    publishers_list = convert_object_id_to_string(publishers)
     
     if publishers_list:
         return publishers_list
