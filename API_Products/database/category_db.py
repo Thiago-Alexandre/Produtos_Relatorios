@@ -1,4 +1,4 @@
-from .db import DB
+from db import DB
 
 
 def insert(dict_values: dict):
