@@ -1,5 +1,5 @@
 from pymongo import MongoClient, errors
-from auth import *
+from .auth import *
 
 
 __DB_CONN = f"mongodb+srv://{DB_USER}:{DB_PASSWD}@{DB_HOST}"
