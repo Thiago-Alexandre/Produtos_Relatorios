@@ -11,9 +11,7 @@ def get_country_name_list() -> list:
         country = DB.country
 
         countries_db = list(country.find({}, {"_id": 0}))
-
-        if len(countries_db) > 0:
-            result_data = [c["name"] for c in countries_db]
+        result_data = countries_db
     except CollectionInvalid as error:
         raise Exception(f"CollectionInvalid error: {error}")
     except PyMongoError as error:
