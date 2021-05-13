@@ -8,7 +8,7 @@ def author_insert_validation(dict_values: dict):
             text = author_db.insert_author(dict_values)
             return dict(status=200, text=text)
         else:
-            dict(status=400, text="O país não foi encontrado!")
+            return dict(status=400, text="O país não foi encontrado!")
     except Exception as error:
             return dict(status=400, text=error.args[0])
 
