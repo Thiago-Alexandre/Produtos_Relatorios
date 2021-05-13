@@ -1,6 +1,6 @@
 from pymongo.errors import CollectionInvalid, PyMongoError
 import re
-from db import DB
+from .db import DB
 
 
 # Returns a country name list or None if nothing is find:
