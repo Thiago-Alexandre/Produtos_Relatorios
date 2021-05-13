@@ -3,7 +3,7 @@ from pymongo.errors import CollectionInvalid, PyMongoError
 
 
 # Returns a book format list or None if nothing is find:
-def get_book_format_list() -> list or None:
+def get_book_format_list_db() -> list or None:
     try:
         book_format = DB.format
         query_result = list(book_format.find({}, {"_id": 0}))
