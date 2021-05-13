@@ -4,7 +4,7 @@ from db import DB
 
 
 # Returns a country name list or None if nothing is find:
-def get_country_name_list() -> list:
+def get_country_name_list() -> list or None:
     result_data = None
 
     try:
