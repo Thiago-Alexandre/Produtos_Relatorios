@@ -1,8 +1,7 @@
 from API_Products.controllers.publisher import *
 from unittest import mock, TestCase
 
-class TestDataBase(TestCase):
-
+class TestPublisher(TestCase):
 
     def test_insert_publisher_works(self):
         with mock.patch("API_Products.controllers.publisher.insert_publisher") as mock_publisher:
