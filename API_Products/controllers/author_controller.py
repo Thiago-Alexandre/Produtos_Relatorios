@@ -15,7 +15,7 @@ def author_insert_validation(dict_values: dict):
 
 def author_read_all_validation():
         try:
-            authors = author_db.read_all_author_db()
+            authors = author_db.read_all_authors_db()
             return dict(status=200, text=authors)
         except Exception as error:
             return dict(status=400, text=error.args[0])
