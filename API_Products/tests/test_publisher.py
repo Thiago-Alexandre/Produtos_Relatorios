@@ -3,18 +3,24 @@ from unittest import mock, TestCase
 
 class TestDataBase(TestCase):
 
-    @mock.patch("API_Products.controllers.publisher.insert_publisher")
-    def test_insert_publisher_works(self, mock_publisher):
-        mock_publisher.exist_country.return_values = []
 
-        result = insert_publisher(dict(name="test", country="test"))
-        self.assertEqual(result, {'status': 400, 'text': 'País não foi encontrado !'})
+    def test_insert_publisher_works(self):
+        with mock.patch("API_Products.controllers.publisher.insert_publisher") as mock_publisher:
 
-        result = insert_publisher(dict())
-        self.assertEqual(result, {'status': 400, 'text': 'country'})
+            mock_publisher.exist_country.return_values = []
 
-        result = insert_publisher(dict(name="test", country="Brasil"))
-        self.assertEqual(result, {'status': 200, 'text': 'Registro inserido com sucesso !'})
+            result = insert_publisher(dict(name="test", country="test"))
+            self.assertEqual(result, {'status': 400, 'text': 'País não foi encontrado!'})
+
+        with mock.patch("API_Products.controllers.publisher.insert_publisher") as mock_publisher:
+
+            mock_publisher.exist_country.return_values = [dict()]
+
+            result = insert_publisher(dict())
+            self.assertEqual(result, {'status': 400, 'text': 'country'})
+
+            result = insert_publisher(dict(name="test", country="Brasil"))
+            self.assertEqual(result, {'status': 200, 'text': 'Registro inserido com sucesso!'})
 
     @mock.patch("API_Products.controllers.publisher.publisher_db")
     def test_read_all_publisher_works(self, mock_publisher):

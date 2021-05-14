@@ -5,7 +5,7 @@ from .db import DB
 def insert_publishers_db(dict_values: dict) -> str:
     if dict_values:
         DB["publisher"].insert_one(dict_values)
-        return "Registro inserido com sucesso !"
+        return "Registro inserido com sucesso!"
     else:
         raise Exception("Registro inválido.")
 
@@ -18,5 +18,5 @@ def read_all_publishers_db() -> list:
     if publishers_list:
         return publishers_list
     else:
-        raise Exception("Nenhuma editora encontrada !")
+        raise Exception("Nenhuma editora encontrada!")
 
