@@ -4,7 +4,7 @@ from database.db import get_db
 
 
 # Returns a language name list or None if nothing is find:
-def get_language_book_list() -> list or None:
+def get_language_book_list_db() -> list or None:
     try:
         db = get_db()
         language_book = db.language_book
