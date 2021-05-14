@@ -24,18 +24,12 @@ def read_all_books_db() -> list:
 
 
 def isbn_exists_db(isbn_to_check: str) -> bool:
-    if not isinstance(isbn_to_check, str):
-        return False
-
-    # Grants wheter all isbn characters is numeric:
-    isbn = [s for s in list(isbn_to_check) if s.isdigit()]
-    isbn = "".join(isbn)
 
     # Checks if exists a book with provided isbn in db:
     try:
         db = get_db()
         book = db.book
-        query_result = book.find_one({"$or": [{"isbn-10": isbn}, {"isbn-13": isbn}]})
+        query_result = book.find_one({"$or": [{"isbn-10": isbn_to_check}, {"isbn-13": isbn_to_check}]})
 
         return True if query_result else False
     except CollectionInvalid as error:
