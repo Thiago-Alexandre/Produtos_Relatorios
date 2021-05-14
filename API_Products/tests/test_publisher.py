@@ -1,25 +1,26 @@
 from API_Products.controllers.publisher import *
 from unittest import mock, TestCase
 
+
 class TestPublisher(TestCase):
 
-    def test_insert_publisher_works(self):
-        with mock.patch("API_Products.controllers.publisher.insert_publisher") as mock_publisher:
+    @mock.patch("API_Products.controllers.publisher.country_db")
+    @mock.patch("API_Products.controllers.publisher.publisher_db")
+    def test_insert_publisher_works(self, mock_publisher, mock_country):
 
-            mock_publisher.exist_country.return_values = []
+            mock_country.search_country.return_value = False
 
             result = insert_publisher(dict(name="test", country="test"))
             self.assertEqual(result, {'status': 400, 'text': 'País não foi encontrado!'})
 
-        with mock.patch("API_Products.controllers.publisher.insert_publisher") as mock_publisher:
+            mock_country.search_country.return_value = True
+            mock_publisher.insert_publishers_db.return_value = "Success"
+            result2 = insert_publisher(dict(name="test", country="test"))
+            self.assertEqual(result2, {'status': 200, 'text': "Success"})
 
-            mock_publisher.exist_country.return_values = [dict()]
+            result3 = insert_publisher(dict())
+            self.assertEqual(result3, {'status': 400, 'text': 'country'})
 
-            result = insert_publisher(dict())
-            self.assertEqual(result, {'status': 400, 'text': 'country'})
-
-            result = insert_publisher(dict(name="test", country="Brasil"))
-            self.assertEqual(result, {'status': 200, 'text': 'Registro inserido com sucesso!'})
 
     @mock.patch("API_Products.controllers.publisher.publisher_db")
     def test_read_all_publisher_works(self, mock_publisher):

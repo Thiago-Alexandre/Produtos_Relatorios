@@ -3,10 +3,10 @@ from API_Products.database import category_db, db
 
 def read_all_categories() -> dict:
     try:
-        categories = category_db.read_all()
+        categories = category_db.read_all_categories_db()
         return dict(status=200, text=categories)
     except Exception as error:
-        return dict(status=400, text=error)
+        return dict(status=400, text=error.args[0])
 
 
 def insert_categories(dict_values: dict) -> dict:
@@ -20,7 +20,7 @@ def insert_categories(dict_values: dict) -> dict:
 
     if not validate_category > 0:
         try:
-            category_db.insert(dict_values)
+            category_db.insert_categories_db(dict_values)
             return dict(status=200, text="Cadastrado com sucesso.")
         except Exception as error:
             return dict(status=400, text=f"Não foi possível cadastrar a categoria.{error}")
