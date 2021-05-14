@@ -2,7 +2,7 @@ from API_Products.additionals.functions import convert_object_id_to_string
 from .db import DB
 
 
-def insert(dict_values: dict) -> str:
+def insert_publishers_db(dict_values: dict) -> str:
     if dict_values:
         DB["publisher"].insert_one(dict_values)
         return "Registro inserido com sucesso !"
@@ -10,8 +10,9 @@ def insert(dict_values: dict) -> str:
         raise Exception("Registro inválido.")
 
 
-def read_all() -> list:
-    publishers = DB.publisher.find()
+def read_all_publishers_db() -> list:
+    publishers  = DB.publisher.find()
+
     publishers_list = convert_object_id_to_string(publishers)
     
     if publishers_list:
