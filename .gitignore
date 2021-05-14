@@ -129,6 +129,11 @@ dmypy.json
 .pyre/
 .idea
 
+# Tests
+.coverage
+.pytest_cache
+API_Products/htmlcov
+API_Products/__pycache__
 
 # -------- API Products: --------
 API_Products/.idea
