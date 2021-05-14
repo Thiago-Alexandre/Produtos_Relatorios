@@ -17,9 +17,10 @@ def insert_book_validations(dict_values: dict):
     elif int(dict_values['item_quantity']) < 0:
         raise Exception("A quantidade de livros deve ser maior ou igual a zero.")
     elif int(dict_values['page_quantity']) <= 0:
-        raise Exception("O quantidade da páginas do livro deve ser maior que zero.")
+        raise Exception("A quantidade de páginas do livro deve ser maior que zero.")
 
-    if dict_values['format'] == "Físico" or dict_values['format'] == "Braille":
+    list_of_material_books = ['Físico', 'Braille']
+    if dict_values['format'] in list_of_material_books:
         if float(dict_values['weight']) <= 0:
             raise Exception("O peso de um livro físico deve ser maior que zero.")
         elif float(dict_values['size']['height']) <= 0:
@@ -30,7 +31,7 @@ def insert_book_validations(dict_values: dict):
             raise Exception("A largura de um livro físico deve ser maior que zero.")
 
     if datetime.strptime(dict_values['published_at'], "%d/%m/%Y") > datetime.today():
-        raise Exception("A data de publicação é inválida")
+        raise Exception("A data de publicação é inválida.")
 
     if isinstance(dict_values['isbn-10'], str) and len(dict_values['isbn-10']) == 10:
         if book_db.isbn_exists_db(dict_values['isbn-10']):
