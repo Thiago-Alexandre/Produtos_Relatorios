@@ -15,4 +15,4 @@ def get_book_format_list_db() -> list or None:
     except CollectionInvalid as error:
         raise Exception(f"PyMongo Collection Ivalid error: {error.args[0]}")
     except Exception as error:
-        raise Exception(f"Other error: {error.args[0]}")
+        raise Exception(error.args[0])
