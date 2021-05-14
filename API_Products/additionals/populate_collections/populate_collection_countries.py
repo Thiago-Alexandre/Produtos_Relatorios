@@ -1,6 +1,6 @@
 from requests import get
 from requests.exceptions import HTTPError
-from database.db import DB
+from database.db import get_db
 from pymongo.errors import CollectionInvalid
 
 __API_URL = "https://restcountries.eu/rest/v2/all"
@@ -25,7 +25,8 @@ def populate_countries():
 
     # Save the list in the db:
     try:
-        country = DB.country
+        db = get_db()
+        country = db.country
         country.insert_many(countries)
     except CollectionInvalid as error:
         print(f"PyMongo error: {error}")

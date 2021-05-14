@@ -2,7 +2,7 @@ from json import load
 
 from pymongo.errors import CollectionInvalid, PyMongoError
 
-from database.db import DB
+from database.db import get_db
 
 
 def populate_book():
@@ -12,8 +12,8 @@ def populate_book():
         book_list = load(json_file_books)
 
     try:
-        # book = DB.book
-        book = DB["book"]
+        db = get_db()
+        book = db.book
         book.delete_many({})
         book.insert_many(book_list)
     except CollectionInvalid as error:
