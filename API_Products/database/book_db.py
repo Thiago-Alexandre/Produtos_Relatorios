@@ -1,6 +1,6 @@
 from pymongo.errors import CollectionInvalid, PyMongoError
-from additionals.functions import convert_object_id_to_string
-from database.db import get_db
+# from additionals.functions import convert_object_id_to_string
+from API_Products.database.db import get_db
 
 
 def insert_book_db(dict_values: dict):
@@ -36,3 +36,18 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"CollectionInvalid error: {error.args[0]}")
     except PyMongoError as error:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
+
+
+def check_stock_controller(list_values):
+    for dict_values in list_values:
+        check_stock_db(dict_values)
+
+
+def check_stock_db(dict_values):
+    db = get_db()
+    db.book.find(dict_values, {})
+
+
+
+x = [dict(title="TDD com Python: Siga o Bode dos Testes: Usando Django, Selenium e JavaScript", qtd_product=3)]
+check_stock_controller(x)
