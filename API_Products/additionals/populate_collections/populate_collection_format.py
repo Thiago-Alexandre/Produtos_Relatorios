@@ -1,5 +1,6 @@
-from database.db import DB
 from pymongo.errors import CollectionInvalid
+
+from database.db import get_db
 
 __formats = [
     {"name": "Físico", "digital": False},
@@ -12,7 +13,8 @@ __formats = [
 def populate_format():
     # Save the list in the db:
     try:
-        book_format = DB.format
+        db = get_db()
+        book_format = db.format
         book_format.delete_many({})
         book_format.insert_many(__formats)
     except CollectionInvalid as error:

@@ -1,12 +1,15 @@
-from pymongo.errors import CollectionInvalid, PyMongoError
 import re
-from .db import DB
+
+from pymongo.errors import CollectionInvalid, PyMongoError
+
+from database.db import get_db
 
 
 # Returns a country name list or None if nothing is find:
 def get_country_name_list_db() -> list or None:
     try:
-        country = DB.country
+        db = get_db()
+        country = db.country
 
         result_data = list(country.find({}, {"_id": 0}))
         if len(result_data) > 0:
@@ -21,9 +24,9 @@ def get_country_name_list_db() -> list or None:
 
 # Returns dict if country exists in database or None if not or throw exception:
 def search_country(name_country: str) -> dict or None:
-
     try:
-        country = DB.country
+        db = get_db()
+        country = db.country
         regx = re.compile(f"^{name_country}", re.IGNORECASE)
         return country.find_one({"name": regx}, {"_id": 0})
 

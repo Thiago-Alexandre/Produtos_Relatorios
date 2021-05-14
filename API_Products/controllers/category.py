@@ -1,4 +1,5 @@
-from API_Products.database import category_db, db
+from database import category_db
+from database.db import get_db
 
 
 def read_all_categories() -> dict:
@@ -10,13 +11,13 @@ def read_all_categories() -> dict:
 
 
 def insert_categories(dict_values: dict) -> dict:
-
     if dict_values["name"].strip() == "":
         return dict(status=400, text="Valor inválido.")
 
     dict_values["name"] = dict_values["name"].capitalize()
 
-    validate_category = db.DB["category"].count_documents(dict_values, {})
+    db = get_db()
+    validate_category = db["category"].count_documents(dict_values, {})
 
     if not validate_category > 0:
         try:
@@ -27,5 +28,3 @@ def insert_categories(dict_values: dict) -> dict:
 
     else:
         return dict(status=400, text="Categoria já cadastrada.")
-
-

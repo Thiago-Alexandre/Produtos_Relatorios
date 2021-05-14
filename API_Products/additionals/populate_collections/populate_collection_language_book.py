@@ -1,5 +1,6 @@
-from database.db import DB
 from pymongo.errors import CollectionInvalid
+
+from database.db import get_db
 
 
 def populate_languages():
@@ -12,7 +13,8 @@ def populate_languages():
 
     # Save the list in the db:
     try:
-        language_book = DB.language_book
+        db = get_db()
+        language_book = db.language_book
         language_book.insert_many(language_list)
     except CollectionInvalid as error:
         print(f"PyMongo error: {error}")

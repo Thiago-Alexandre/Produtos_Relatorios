@@ -1,16 +1,18 @@
-from database.db import DB
-from pymongo.errors import CollectionInvalid, PyMongoError
+from pymongo.errors import CollectionInvalid
+
+from database.db import get_db
 
 
 # Returns a book format list or None if nothing is find:
 def get_book_format_list_db() -> list or None:
     try:
-        book_format = DB.format
-        query_result = list(book_format.find({}, {"_id": 0}))
+        db = get_db()
+        book_format = db.format
+        result_data = list(book_format.find({}, {"_id": 0}))
 
-        if len(query_result) > 0:
-            return query_result
+        if len(result_data) > 0:
+            return result_data
     except CollectionInvalid as error:
-        raise Exception(f"Collection Ivalid error: {error.args[0]}")
-    except PyMongoError as error:
-        raise Exception(f"Other PyMongo error: {error.args[0]}")
+        raise Exception(f"PyMongo Collection Ivalid error: {error.args[0]}")
+    except Exception as error:
+        raise Exception(f"Other error: {error.args[0]}")
