@@ -4,10 +4,10 @@ from db import DB
 
 
 # Returns a language name list or None if nothing is find:
-def get_language_list() -> list or None:
+def get_language_book_list() -> list or None:
     try:
-        language = DB.language
-        result_data = list(language.find({}, {"_id": 0}))
+        language_book = DB.language_book
+        result_data = list(language_book.find({}, {"_id": 0}))
         if len(result_data):
             return result_data
     except CollectionInvalid as error:
