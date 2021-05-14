@@ -5,7 +5,7 @@ def insert_book(dict_values: dict) -> dict:
     try:
         insert_book_validations(dict_values)
         book_db.insert_book_db(dict_values)
-        return dict(status=200, text="livro cadastrado com sucesso!")
+        return dict(status=200, text="Livro cadastrado com sucesso!")
     except Exception as error:
         return dict(status=400, text=f"{error}")
 
