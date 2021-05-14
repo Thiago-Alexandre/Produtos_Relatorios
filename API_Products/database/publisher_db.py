@@ -20,3 +20,14 @@ def read_all_publishers_db() -> list:
     else:
         raise Exception("Nenhuma editora encontrada!")
 
+
+def delete_publishers_db(dict_values: dict) -> str:
+    publisher_name = dict_values['name']
+    publisher_country = dict_values['country']    
+
+    affected_rows = DB.publisher.delete_one({"name": publisher_name, "country": publisher_country}).deleted_count
+
+    if affected_rows:
+        return "Registro excluído com sucesso!"
+    else:
+        raise Exception("Nenhuma editora encontrada!")
