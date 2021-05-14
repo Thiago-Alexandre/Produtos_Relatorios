@@ -12,8 +12,8 @@ def populate_languages():
 
     # Save the list in the db:
     try:
-        language = DB.language
-        language.insert_many(language_list)
+        language_book = DB.language_book
+        language_book.insert_many(language_list)
     except CollectionInvalid as error:
         print(f"PyMongo error: {error}")
     except Exception as error:
