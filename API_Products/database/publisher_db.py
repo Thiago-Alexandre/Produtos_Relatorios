@@ -1,4 +1,4 @@
-from API_Products.additionals.functions import convert_object_id_to_string
+from additionals.functions import convert_object_id_to_string
 from .db import DB
 
 
