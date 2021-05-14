@@ -8,7 +8,7 @@ def insert_publisher(dict_values: dict) -> dict:
                 publishers = publisher_db.insert_publishers_db(dict_values)
                 return dict(status=200, text=publishers)
             else:
-                return dict(status=400, text="País não foi encontrado !")
+                return dict(status=400, text="País não foi encontrado!")
 
         except Exception as error:
             return dict(status=400, text=error.args[0])   
