@@ -1,0 +1,184 @@
+[
+    {
+        "title": "Python Fluente: Programação Clara, Concisa e Eficaz",
+        "description": "A simplicidade de Python permite que você se torne produtivo rapidamente, porém isso muitas vezes significa que você não estará usando tudo que ela tem a oferecer. Com este guia prático, você aprenderá a escrever um código Python eficiente e idiomático aproveitando seus melhores recursos – alguns deles, pouco conhecidos. O autor Luciano Ramalho apresenta os recursos essenciais da linguagem e bibliotecas de Python mostrando como você pode tornar o seu código mais conciso, mais rápido e mais legível ao mesmo tempo.",
+        "language_book": "Português",
+        "category": [
+            "Computação",
+            "Informática"
+        ],
+        "author": [
+            {
+                "name": "Luciano",
+                "lastname": "Ramalho",
+                "country": "Brasil"
+            }
+        ],
+        "edition": 1,
+        "publisher": {
+            "name": "Novatec",
+            "country": "Brasil"
+        },
+        "isbn-10": "8575224625",
+        "isbn-13": "978-8575224625",
+        "format": "Físico",
+        "published_at": "2015-09-15",
+        "item_price": 101.19,
+        "item_quantity": 237,
+        "rating": 4.66,
+        "comments": [
+            {
+                "author_name": "Carlos Eduardo Ribeiro",
+                "comment": "Muito bom...",
+                "classification": 5,
+                "created_at": "2021-05-11"
+            },
+            {
+                "author_name": "Gabriela Cristofolini",
+                "comment": "Excelente didática...",
+                "classification": 4,
+                "created_at": "2021-05-11"
+            },
+            {
+                "author_name": "Jeff Silva",
+                "comment": "Autor explica muito...",
+                "classification": 5,
+                "created_at": "2021-05-11"
+            }
+        ],
+        "size": {
+            "height": 16.6,
+            "lenght": 23.4,
+            "width": 4
+        },
+        "weight": 2,
+        "page_quantity": 800
+    },
+    {
+        "title": "TDD com Python: Siga o Bode dos Testes: Usando Django, Selenium e JavaScript",
+        "description": "Ao conduzir você pelo desenvolvimento de uma verdadeira aplicação web do início ao fim, a segunda edição deste guia “mão na massa” mostra as vantagens práticas do TDD (Test-Driven Development, ou Desenvolvimento Orientado a Testes) com Python. Você aprenderá a escrever e a executar testes antes de construir cada parte de sua aplicação, e então desenvolverá a quantidade mínima de código necessária para que os testes passem. O resultado? Um código limpo, que funcionará. Durante o processo, você conhecerá o básico sobre Django, Selenium, Git, jQuery e Mock, junto com as técnicas atuais para desenvolvimento web. Se estiver pronto para levar suas habilidades com Python para o próximo patamar, este livro – atualizado com Python 3.6 – mostrará claramente como o TDD incentiva você a criar designs simples e pode lhe inspirar confiança: mergulhe no fluxo de trabalho de TDD, incluindo o ciclo de testes de unidade/código e refatoração; utilize testes de unidade para classes e funções, e testes funcionais para interações com usuários no navegador; saiba quando e como usar objetos simulados e conheça os prós e contras dos testes isolados versus testes integrados; teste e automatize suas implantações com um servidor de staging; aplique testes nos plugins de terceiros que você integrar ao seu site; execute testes automaticamente usando um ambiente de Integração Contínua.",
+        "language_book": "Português",
+        "category": [
+            "Computação",
+            "Informática",
+            "Programação"
+        ],
+        "author": [
+            {
+                "name": "Harry",
+                "lastname": "J.W. Percival",
+                "country": "Reino Unido"
+            }
+        ],
+        "edition": 1,
+        "publisher": {
+            "name": "Novatec",
+            "country": "Brasil"
+        },
+        "isbn-10": "8575226428",
+        "isbn-13": "978-8575226421",
+        "format": "Físico",
+        "published_at": "2017-12-12",
+        "item_price": 96.95,
+        "item_quantity": 546,
+        "rating": 4.66,
+        "comments": [
+            {
+                "author_name": "Carlos Eduardo Ribeiro",
+                "comment": "Muito bom...",
+                "classification": 5,
+                "created_at": "2021-05-11"
+            }
+        ],
+        "size": {
+            "height": 17.27,
+            "lenght": 23.37,
+            "width": 3.3
+        },
+        "weight": 1.8,
+        "page_quantity": 648
+    },
+    {
+        "title": "Web Scraping com Python: Coletando Mais Dados da web Moderna",
+        "description": "Se a programação é mágica, o web scraping certamente é uma forma de magia. Ao escrever um programa automatizado simples, é possível consultar servidores web, requisitar dados e interpretá-los a fim de extrair as informações desejadas. A edição ampliada deste livro prático não só apresenta uma introdução ao web scraping, como também serve de guia completo para coletar quase todos os tipos de dados da web moderna.",
+        "language_book": "Português",
+        "category": [
+            "Computação",
+            "Informática",
+            "Programação",
+            "Internet"
+        ],
+        "author": [
+            {
+                "name": "Ryan",
+                "lastname": "Mitchell",
+                "country": "Estados Unidos da America"
+            }
+        ],
+        "edition": 2,
+        "publisher": {
+            "name": "Novatec",
+            "country": "Brasil"
+        },
+        "isbn-10": "8575227300",
+        "isbn-13": "978-8575227305",
+        "format": "Físico",
+        "published_at": "2019-04-01",
+        "item_price": 68.04,
+        "item_quantity": 198,
+        "rating": 5,
+        "comments": [
+            {
+                "author_name": "Carlos Eduardo Ribeiro",
+                "comment": "Muito bom...",
+                "classification": 5,
+                "created_at": "2021-05-11"
+            }
+        ],
+        "size": {
+            "height": 17.2,
+            "lenght": 23.5,
+            "width": 1.6
+        },
+        "weight": 1,
+        "page_quantity": 328
+    },
+    {
+        "title": "Microsserviços Prontos Para a Produção: Construindo Sistemas Padronizados em uma Organização de Engenharia de Software",
+        "description": "Um dos maiores desafios para as empresas que adotaram a arquitetura de microsserviços é a falta de padronização de arquitetura – operacional e organizacional. Depois de dividir uma aplicação monolítica ou construir um ecossistema de microsserviços a partir do zero, muitos engenheiros se perguntam o que vem a seguir. Neste livro prático, a autora Susan Fowler apresenta com profundidade um conjunto de padrões de microsserviço, aproveitando sua experiência de padronização de mais de mil microsserviços do Uber. Você aprenderá a projetar microsserviços que são estáveis, confiáveis, escaláveis, tolerantes a falhas, de alto desempenho, monitorados, documentados e preparados para qualquer catástrofe. Explore os padrões de disponibilidade de produção, incluindo:Estabilidade e confiabilidade – desenvolva, implante, introduza e descontinue microsserviços; proteja-se contra falhas de dependência; Escalabilidade e desempenho – conheça os componentes essenciais para alcançar mais eficiência do microsserviço; Tolerância a falhas e prontidão para catástrofes – garanta a disponibilidade forçando ativamente os microsserviços a falhar em tempo real; Monitoramento – aprenda como monitorar, gravar logs e exibir as principais métricas; estabeleça procedimentos de alerta e de prontidão.",
+        "language_book": "Português",
+        "category": [
+            "Computação",
+            "Informática",
+            "Programação",
+            "Internet"
+        ],
+        "author": [
+            {
+                "name": "Susan",
+                "lastname": "J. Fowler",
+                "country": "Estados Unidos da America"
+            }
+        ],
+        "edition": 2,
+        "publisher": {
+            "name": "Novatec",
+            "country": "Brasil"
+        },
+        "isbn-10": "8575226215",
+        "isbn-13": "978-8575226216",
+        "format": "Físico",
+        "published_at": "2017-09-05",
+        "item_price": 35.12,
+        "item_quantity": 224,
+        "rating": 0,
+        "comments": [],
+        "size": {
+            "height": 15.4,
+            "lenght": 22.4,
+            "width": 1.4
+        },
+        "weight": 0.8,
+        "page_quantity": 224
+    }
+]
