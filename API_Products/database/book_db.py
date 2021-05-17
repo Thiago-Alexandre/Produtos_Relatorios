@@ -66,7 +66,7 @@ def update_book_db(dict_values):
     if affected_rows:
          return "Registro alterado com sucesso!"
     else:
-        raise Exception("Nenhuma editora encontrada!")
+        raise Exception("Nenhuma livro encontrado!")
 
 
 # Parametros necessários ID_ITEM(String) e um DICT
