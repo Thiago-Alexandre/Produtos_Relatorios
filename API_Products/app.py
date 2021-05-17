@@ -1,6 +1,6 @@
 from flask import Flask, request
-from API_Products.controllers import category, publisher, author_controller, book
-from API_Products.database.auth import KEYS
+from controllers import category, publisher, author_controller, book
+from database.auth import KEYS
 
 app = Flask(__name__)
 
@@ -93,4 +93,4 @@ def insert_books():
     return books, status
 
 
-app.run(debug=True)
+# app.run(debug=True)
