@@ -1,17 +1,17 @@
 from database import book_db
 from datetime import datetime
 
+
 def insert_book(dict_values: dict) -> dict:
     try:
         insert_book_validations(dict_values)
         book_db.insert_book_db(dict_values)
-        return dict(status=200, text="Livro cadastrado com sucesso!")
+        return dict(status=200, message="Livro cadastrado com sucesso!")
     except Exception as error:
-        return dict(status=400, text=f"{error}")
+        return dict(status=400, error=error.args[0], message="Verifique os dados informados.")
 
 
 def insert_book_validations(dict_values: dict):
-
     if float(dict_values['item_price']) <= 0:
         raise Exception("O preço deve ser maior que zero.")
     elif int(dict_values['item_quantity']) < 0:
@@ -44,4 +44,3 @@ def insert_book_validations(dict_values: dict):
             raise Exception("Isbn 13 já cadastrado.")
     else:
         raise Exception("Formato inválido!")
-
