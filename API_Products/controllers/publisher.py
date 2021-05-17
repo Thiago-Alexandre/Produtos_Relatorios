@@ -19,3 +19,12 @@ def read_all_publishers() -> dict:
         return dict(status=200, text=publishers)
     except Exception as error:
         return dict(status=400, text=error.args[0])    
+
+
+def update_publisher(dict_values) -> dict:
+    try:
+        publishers = publisher_db.update_publisher_db(dict_values)
+        return dict(status=200, text=publishers)
+    except Exception as error:
+        return dict(status=400, text=error.args[0])    
+
