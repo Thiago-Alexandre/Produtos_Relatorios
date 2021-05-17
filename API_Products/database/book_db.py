@@ -1,6 +1,7 @@
 from pymongo.errors import CollectionInvalid, PyMongoError
 from additionals.functions import convert_object_id_to_string
 from database.db import get_db
+from bson.objectid import ObjectId
 
 
 def insert_book_db(dict_values: dict):
@@ -36,3 +37,16 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"CollectionInvalid error: {error.args[0]}")
     except PyMongoError as error:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
+
+
+def search_book_for_id(id_book: str) -> dict:
+
+    db = get_db()
+    book = db.book
+    book_saved = book.find_one({"_id": ObjectId(id_book)})
+    book_saved["_id"] = str(book_saved["_id"])
+
+    if book_saved:
+        return book_saved
+    else:
+        raise Exception("Nenhum livro encontrado!")

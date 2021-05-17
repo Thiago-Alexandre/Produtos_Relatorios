@@ -1,6 +1,7 @@
 from database import book_db
 from datetime import datetime
 
+
 def insert_book(dict_values: dict) -> dict:
     try:
         insert_book_validations(dict_values)
@@ -45,3 +46,17 @@ def insert_book_validations(dict_values: dict):
     else:
         raise Exception("Formato inválido!")
 
+
+def add_comment_book(comment_values: dict):
+    try:
+        book = book_db.search_book_for_id(comment_values["id_book"])
+        book["comments"].append(comment_values["comment"])
+        total_classification = 0
+        quantity_comments = len(book["comments"])
+        for c in book["comments"]:
+            total_classification += c["classification"]
+        book["rating"] = total_classification / quantity_comments
+        book_db.update_book(book)
+        return dict(status=200, text="Comentário adicionado com sucesso!")
+    except Exception as error:
+        return dict(status=400, text=f"Erro: {error}")
