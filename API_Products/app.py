@@ -1,5 +1,5 @@
 from flask import Flask, request
-from controllers import category, publisher, author_controller
+from controllers import category, publisher, author_controller, book
 from database.auth import KEYS
 
 app = Flask(__name__)
@@ -80,4 +80,17 @@ def insert_authors():
     return authors, status
 
 
-app.run(debug=True)
+@app.route("/insert_books", methods=["POST"])
+def insert_books():
+    header = dict(request.headers)
+    if header["Senha"] not in KEYS:
+        return dict(text="Chave de acesso inválida."), 400
+    dict_values = request.get_json()
+    books = book.insert_book(dict_values)
+    status = books["status"]
+    del books["status"]
+
+    return books, status
+
+
+# app.run(debug=True)
