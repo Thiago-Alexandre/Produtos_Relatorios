@@ -58,3 +58,16 @@ def exists_publisher(dict_values) -> bool:
         return True
     else:
         return False
+
+
+def validate_publisher(publisher_name) -> bool:    
+    values = dict(name=publisher_name)
+
+    db = get_db()
+
+    validate = db.publisher.count_documents(values, {})    
+     
+    if validate > 0:
+        return True
+    else:
+        return False
