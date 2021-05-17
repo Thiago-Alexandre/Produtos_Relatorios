@@ -28,3 +28,17 @@ def insert_categories(dict_values: dict) -> dict:
 
     else:
         return dict(status=400, text="Categoria já cadastrada.")
+
+
+def delete_categories(dict_values: dict):
+    if dict_values["name"].strip() == "":
+        return dict(status=400, text="Valor inválido.")
+    dict_values["name"] = dict_values["name"].capitalize()
+    db = get_db()
+    if db["book"].find_one({"category": dict_values["name"]}):
+        return dict(status=400, text="A categoria está sendo utilizada, não é possível deletá-la.")
+    else:
+        deleted_count = category_db.delete_categories_db(dict_values)
+        if deleted_count:
+            return dict(status=200, text="Categoria deletada com sucesso.")
+        return dict(status=500, text="Não foi possível deletar a categoria.")

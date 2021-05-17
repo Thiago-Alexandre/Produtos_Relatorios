@@ -1,8 +1,10 @@
 from flask import Flask, request
-from controllers import category, publisher, author_controller, book
-from database.auth import KEYS
+from API_Products.controllers import category, publisher, author_controller, book
+from API_Products.database.auth import KEYS
 
 app = Flask(__name__)
+
+#Rotas categorias
 
 
 @app.route("/read_categories", methods=["GET"])
@@ -30,6 +32,21 @@ def insert_categories():
     return categories, status
 
 
+@app.route("/delete_categories", methods=["DELETE"])
+def delete_categories():
+    header = dict(request.headers)
+    if header["Senha"] not in KEYS:
+        return dict(text="Chave de acesso inválida."), 400
+    dict_values = request.get_json()
+    category_deleted = category.delete_categories(dict_values)
+    status = category_deleted["status"]
+    del category_deleted["status"]
+
+    return category_deleted, status
+
+#Rotas editoras
+
+
 @app.route("/read_publishers", methods=["GET"])
 def read_publishers():
     header = dict(request.headers)
@@ -53,6 +70,8 @@ def insert_publishers():
     del publishers["status"]
 
     return publishers, status
+
+#Rotas autores
 
 
 @app.route("/read_authors", methods=["GET"])
@@ -79,6 +98,8 @@ def insert_authors():
 
     return authors, status
 
+#Rotas livros
+
 
 @app.route("/insert_books", methods=["POST"])
 def insert_books():
@@ -93,4 +114,4 @@ def insert_books():
     return books, status
 
 
-# app.run(debug=True)
+app.run(debug=True)

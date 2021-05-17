@@ -17,3 +17,16 @@ def read_all_categories_db() -> list:
     if categories_list:
         return categories_list
     raise Exception("Nenhuma categoria encontrada.")
+
+
+def delete_categories_db(dict_values: dict):
+    if dict_values:
+        db = get_db()
+        deleted = db["category"].delete_one(dict_values)
+        return deleted.deleted_count
+    else:
+        raise Exception("Solicitação inválida.")
+
+
+def update_categories():
+    pass
