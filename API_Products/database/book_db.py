@@ -1,6 +1,7 @@
 from pymongo.errors import CollectionInvalid, PyMongoError
-# from additionals.functions import convert_object_id_to_string
-from API_Products.database.db import get_db
+from additionals.functions import convert_object_id_to_string
+from bson.objectid import ObjectId
+from database.db import get_db
 
 
 def insert_book_db(dict_values: dict):
@@ -38,16 +39,35 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
 
 
-def check_stock_controller(list_values):
-    for dict_values in list_values:
-        check_stock_db(dict_values)
+def search_books_for_id(books: list) -> list:
 
-
-def check_stock_db(dict_values):
     db = get_db()
-    db.book.find(dict_values, {})
+    book = db.book
+    conditionals = []
+    for b in books:
+        conditionals.append({"_id": ObjectId(b["_id"])})
+    query_result = book.find({"$or": conditionals})
+    book_list = convert_object_id_to_string(query_result)
+
+    if book_list:
+        return book_list
+    else:
+        raise Exception("Nenhum livro encontrado!")
 
 
+def update_book_db(dict_values):
+    db = get_db()
 
-x = [dict(title="TDD com Python: Siga o Bode dos Testes: Usando Django, Selenium e JavaScript", qtd_product=3)]
-check_stock_controller(x)
+    id = dict_values["_id"]
+    del dict_values["_id"]
+
+    affected_rows = db.book.update_one({"_id": ObjectId(id)}, {"$set": dict_values}).matched_count
+
+    if affected_rows:
+         return "Registro alterado com sucesso!"
+    else:
+        raise Exception("Nenhuma editora encontrada!")
+
+
+# Parametros necessários ID_ITEM(String) e um DICT
+# print(update_book_db("609e8300d3bdef7e5de52830", dict(item_quantity=200)))
