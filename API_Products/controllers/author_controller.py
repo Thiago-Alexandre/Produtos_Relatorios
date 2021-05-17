@@ -19,3 +19,14 @@ def author_read_all_validation():
             return dict(status=200, text=authors)
         except Exception as error:
             return dict(status=400, text=error.args[0])
+
+
+def delete_author(dict_values: dict) -> dict:
+    try:
+        if not author_db.exist_author(dict_values):
+            authors = author_db.delete_authors_db(dict_values)
+        else:
+            raise Exception("A autor já está sendo utilizado, não é possível deletá-lo agora.")
+        return dict(status=200, text=authors)
+    except Exception as error:
+        return dict(status=400, text=error.args[0])
