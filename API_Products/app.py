@@ -1,4 +1,7 @@
 from flask import Flask, request
+
+from book_logs.book_logs import generate_log_data
+from book_logs.logging_db import insert_log_db
 from controllers import category, publisher_controller, author_controller, book
 from database.auth import KEYS
 
@@ -83,14 +86,20 @@ def insert_authors():
 @app.route("/insert_books", methods=["POST"])
 def insert_books():
     header = dict(request.headers)
-    if header["Senha"] not in KEYS:
-        return dict(text="Chave de acesso inválida."), 400
-    dict_values = request.get_json()
-    books = book.insert_book(dict_values)
-    status = books["status"]
-    del books["status"]
 
-    return books, status
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        body_request = request.get_json()
+        response = book.insert_book(body_request)
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print(err.args[0])
+
+    return response, response["status"]
 
 
-# app.run(debug=True)
+app.run(debug=True)
