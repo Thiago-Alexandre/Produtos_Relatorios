@@ -28,3 +28,12 @@ def update_publisher(dict_values) -> dict:
     except Exception as error:
         return dict(status=400, text=error.args[0])    
 
+def delete_publisher(dict_values: dict) -> dict:
+    try:
+        if not publisher_db.exists_publisher(dict_values):
+            publishers = publisher_db.delete_publishers_db(dict_values)
+        else:
+            raise Exception("A editora está sendo utilizada, não é possível deletá-la.")
+        return dict(status=200, text=publishers)
+    except Exception as error:        
+        return dict(status=400, text=error.args[0])    

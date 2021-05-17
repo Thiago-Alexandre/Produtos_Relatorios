@@ -50,5 +50,11 @@ def update_publisher_db(dict_values: dict) -> str:
     else:
         raise Exception("Nenhuma editora encontrada!")
 
-
     
+def exists_publisher(dict_values) -> bool:
+    db = get_db()    
+    
+    if db.book.find_one({"publisher.name": dict_values["name"]}):
+        return True
+    else:
+        return False
