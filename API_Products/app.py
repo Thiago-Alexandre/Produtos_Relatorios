@@ -1,11 +1,6 @@
 from flask import Flask, request
-<<<<<<< HEAD
-from API_Products.controllers import category, publisher, author_controller, book
+from API_Products.controllers import category, publisher_controller, author_controller, book
 from API_Products.database.auth import KEYS
-=======
-from controllers import category, publisher_controller, author_controller, book
-from database.auth import KEYS
->>>>>>> 192098884d0541f85245cf24586d295cc4bd8cbc
 
 app = Flask(__name__)
 
