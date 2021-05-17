@@ -39,6 +39,7 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
 
 
+<<<<<<< HEAD
 def search_books_for_id(books: list) -> list:
 
     db = get_db()
@@ -71,3 +72,14 @@ def update_book_db(dict_values):
 
 # Parametros necessários ID_ITEM(String) e um DICT
 # print(update_book_db("609e8300d3bdef7e5de52830", dict(item_quantity=200)))
+=======
+def update_all_publishers_book_db(publishers_field: str, new_value: str):
+    db = get_db()
+
+    affected_rows = db.book.update_many({'publisher.name': { '$in':[publishers_field]}}, {'$set':{'publisher.name': new_value}}).matched_count
+
+    if affected_rows:
+        return "Registros alterados com sucesso!"
+    else:
+        raise Exception("Nenhuma editora encontrada!")        
+>>>>>>> d1d3b94fa3e5d1982d758a702d08db1d3fddf0da
