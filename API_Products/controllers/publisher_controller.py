@@ -1,4 +1,4 @@
-from database import publisher_db, country_db
+from database import publisher_db, book_db, country_db
 
 def insert_publisher(dict_values: dict) -> dict:
         try:
@@ -24,10 +24,11 @@ def read_all_publishers() -> dict:
 def update_publisher(dict_values) -> dict:
     try:
         if not publisher_db.validate_publisher(dict_values['name']):
-            publishers = publisher_db.update_publisher_db(dict_values)
+            publishers = publisher_db.update_publisher_db(dict_values['name'])
+            book_db.update_all_publishers_book_db(dict_values['name'], dict_values['new_value'])
             return dict(status=200, text=publishers)
         else:
-            raise Exception("A editora já existe, não é possível alterá-la.")                    
+            raise Exception("O nome requerido já está sendo utilizado, não é possível atribuí-lo novamente.")                    
     except Exception as error:
         return dict(status=400, text=error.args[0])    
 

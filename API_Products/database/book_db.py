@@ -36,3 +36,14 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"CollectionInvalid error: {error.args[0]}")
     except PyMongoError as error:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
+
+
+def update_all_publishers_book_db(publishers_field: str, new_value: str):
+    db = get_db()
+
+    affected_rows = db.book.update_many({'publisher.name': { '$in':[publishers_field]}}, {'$set':{'publisher.name': new_value}}).matched_count
+
+    if affected_rows:
+        return "Registros alterados com sucesso!"
+    else:
+        raise Exception("Nenhuma editora encontrada!")        
