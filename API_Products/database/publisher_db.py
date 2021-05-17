@@ -1,4 +1,5 @@
 from additionals.functions import convert_object_id_to_string
+from bson.objectid import ObjectId
 from database.db import get_db
 
 
@@ -34,3 +35,20 @@ def delete_publishers_db(dict_values: dict) -> str:
         return "Registro excluído com sucesso!"
     else:
         raise Exception("Nenhuma editora encontrada!")
+
+
+def update_publisher_db(dict_values: dict) -> str:
+    db = get_db()
+
+    id = ObjectId(dict_values["_id"])
+    del dict_values["_id"]
+
+    affected_rows = db.publisher.update_one({"_id":id}, {"$set", dict_values}).matched_count
+
+    if affected_rows:
+        return "Registro excluído com sucesso!"
+    else:
+        raise Exception("Nenhuma editora encontrada!")
+
+
+    
