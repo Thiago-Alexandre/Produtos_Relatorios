@@ -1,6 +1,11 @@
 from flask import Flask, request
+<<<<<<< HEAD
 from API_Products.controllers import category, publisher, author_controller, book
 from API_Products.database.auth import KEYS
+=======
+from controllers import category, publisher_controller, author_controller, book
+from database.auth import KEYS
+>>>>>>> 192098884d0541f85245cf24586d295cc4bd8cbc
 
 app = Flask(__name__)
 
@@ -52,7 +57,7 @@ def read_publishers():
     header = dict(request.headers)
     if header["Senha"] not in KEYS:
         return dict(text="Chave de acesso inválida."), 400
-    publishers = publisher.read_all_publishers()
+    publishers = publisher_controller.read_all_publishers()
     status = publishers["status"]
     del publishers["status"]
 
@@ -65,7 +70,7 @@ def insert_publishers():
     if header["Senha"] not in KEYS:
         return dict(text="Chave de acesso inválida."), 400
     dict_values = request.get_json()
-    publishers = publisher.insert_publisher(dict_values)
+    publishers = publisher_controller.insert_publisher(dict_values)
     status = publishers["status"]
     del publishers["status"]
 

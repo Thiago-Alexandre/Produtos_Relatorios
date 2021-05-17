@@ -1,5 +1,5 @@
-from additionals.functions import convert_object_id_to_string
-from database.db import get_db
+from API_Products.additionals.functions import convert_object_id_to_string
+from API_Products.database.db import get_db
 
 
 def insert_categories_db(dict_values: dict):
@@ -38,6 +38,4 @@ def update_categories_db(dict_values: dict):
     else:
         raise Exception("Nenhuma categoria encontrada.")
 
-
-print(list(get_db()["book"].find_and_modify({"category": {"$in": ["Computação"]}}, {"0":"AAAA"})))
 

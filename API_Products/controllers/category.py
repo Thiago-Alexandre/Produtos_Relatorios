@@ -1,5 +1,5 @@
-from database import category_db
-from database.db import get_db
+from API_Products.database import category_db
+from API_Products.database.db import get_db
 
 
 def read_all_categories() -> dict:
@@ -57,7 +57,15 @@ def update_categories(dict_values: dict):
         updated_category = category_db.update_categories_db(dict_values)
         if not updated_category:
             return dict(status=400, text="Não foi possível alterar a categoria.")
-        if db["book"].update_many({"category": {"$in": dict_values["old_name"]}},
-                                  {"$set": {"category": dict_values["new_name"]}}):
+        else:
+            db["book"].update_many({}, {"$set": {"category.$[element]": dict_values["new_name"]}}, True,
+            {"array_filters": [{"element": dict_values["old_name"]}]})
             return dict(status=200, text="Categoria alterada com sucesso.")
+            #
+        # db.book.updateMany(
+        #     {},
+        #     {$set: {"category.$[element]": "Info"}},
+        # {arrayFilters: [{"element": "Informática"}]}
+        # )
 
+print(update_categories(dict(old_name="Putari", new_name="Putaria")))
