@@ -28,5 +28,16 @@ def delete_categories_db(dict_values: dict):
         raise Exception("Solicitação inválida.")
 
 
-def update_categories():
-    pass
+def update_categories_db(dict_values: dict):
+    db = get_db()
+    affected_rows = db["category"].update_one({"name": dict_values["old_name"]},
+                                              {"$set": {"name": dict_values["new_name"]}}).matched_count
+
+    if affected_rows:
+        return "Categoria alterada com sucesso"
+    else:
+        raise Exception("Nenhuma categoria encontrada.")
+
+
+print(list(get_db()["book"].find_and_modify({"category": {"$in": ["Computação"]}}, {"0":"AAAA"})))
+

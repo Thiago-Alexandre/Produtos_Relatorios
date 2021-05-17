@@ -42,3 +42,22 @@ def delete_categories(dict_values: dict):
         if deleted_count:
             return dict(status=200, text="Categoria deletada com sucesso.")
         return dict(status=500, text="Não foi possível deletar a categoria.")
+
+
+def update_categories(dict_values: dict):
+    if dict_values["new_name"].strip() == "":
+        return dict(status=400, text="Valor inválido.")
+
+    dict_values["new_name"] = dict_values["new_name"].capitalize()
+    db = get_db()
+
+    if db["category"].find_one({"name": dict_values["new_name"]}):
+        return dict(status=400, text="O nome requerido já está sendo utilizado, não é possível atribuí-lo novamente.")
+    else:
+        updated_category = category_db.update_categories_db(dict_values)
+        if not updated_category:
+            return dict(status=400, text="Não foi possível alterar a categoria.")
+        if db["book"].update_many({"category": {"$in": dict_values["old_name"]}},
+                                  {"$set": {"category": dict_values["new_name"]}}):
+            return dict(status=200, text="Categoria alterada com sucesso.")
+
