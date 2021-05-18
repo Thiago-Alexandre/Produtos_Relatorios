@@ -1,7 +1,7 @@
 from pymongo.errors import CollectionInvalid, PyMongoError
-from additionals.functions import convert_object_id_to_string
+from API_Products.additionals.functions import convert_object_id_to_string
 from bson.objectid import ObjectId
-from database.db import get_db
+from API_Products.database.db import get_db
 
 
 def insert_book_db(dict_values: dict):
