@@ -36,6 +36,7 @@ class TestBook(TestCase):
         result = reserve_books([],[])
         self.assertEqual(result, "Reserva realizada com sucesso!")
 
+
         result = reserve_books([], None)
         self.assertEqual(result, "Erro: 'NoneType' object is not iterable")
 
@@ -57,8 +58,8 @@ class TestBook(TestCase):
         result = finish_purshase([{"item_quantity":1, "reserve_quantity":1, "quantity_purchased":1}], False)
         self.assertEqual(result, {'status': 200, 'text': 'Estoque alterado com sucesso!'})
 
-
-    def test_insert_book_validations_works(self):
+    @mock.patch("API_Products.controllers.book.book_db")
+    def test_insert_book_validations_works(self, mock_book_db):
 
         with self.assertRaises(Exception) as error:
             insert_book_validations(dict(item_price=0))
@@ -92,13 +93,42 @@ class TestBook(TestCase):
             insert_book_validations(dict(item_quantity=0, item_price=1, page_quantity=1, format="Físico", weight=1, size=dict(height=1, lenght=1, width=1), published_at="01/10/2025"))
         self.assertEqual("A data de publicação é inválida.", error.exception.args[0])
 
-        # with self.assertRaises(Exception) as error:
-        #     dict_values = dict(item_quantity=0, item_price=1, page_quantity=1, format="Físico", weight=1, size=dict(height=1, lenght=1, width=1), published_at="01/10/2020")
-        #     dict_values['isbn-10'] = "1111111111"
-        #     dict_values['isbn-13'] = "1111111111111"
-        #     insert_book_validations(dict_values)
-        # self.assertEqual("A data de publicação é inválida.", error.exception.args[0])
-        #
+        with self.assertRaises(Exception) as error:
+            dict_values = dict(item_quantity=0, item_price=1, page_quantity=1, format="Físico", weight=1, size=dict(height=1, lenght=1, width=1), published_at="01/10/2020")
+            dict_values['isbn-10'] = "111111111"
+            insert_book_validations(dict_values)
+        self.assertEqual("Formato inválido!", error.exception.args[0])
+
+        with self.assertRaises(Exception) as error:
+            dict_values = dict(item_quantity=0, item_price=1, page_quantity=1, format="Físico", weight=1, size=dict(height=1, lenght=1, width=1), published_at="01/10/2020")
+            dict_values['isbn-10'] = "111111111"
+            dict_values['isbn-13'] = "111111111"
+            insert_book_validations(dict_values)
+        self.assertEqual("Formato inválido!", error.exception.args[0])
+
+        mock_book_db.isbn_exists_db.return_value = True
+        with self.assertRaises(Exception) as error:
+            dict_values = dict(item_quantity=0, item_price=1, page_quantity=1, format="Físico", weight=1, size=dict(height=1, lenght=1, width=1), published_at="01/10/2020")
+            dict_values['isbn-10'] = "1111111111"
+            dict_values['isbn-13'] = "1111111111111"
+            insert_book_validations(dict_values)
+        self.assertEqual("Isbn 10 já cadastrado.", error.exception.args[0])
+        mock_book_db.isbn_exists_db.return_value = False
+
+        with self.assertRaises(Exception) as error:
+            dict_values = dict(item_quantity=0, item_price=1, page_quantity=1, format="Físico", weight=1, size=dict(height=1, lenght=1, width=1), published_at="01/10/2020")
+            dict_values['isbn-10'] = "1111111111"
+            dict_values['isbn-13'] = "fasdfasdfdsfadsfadsfadsfadfadsf"
+            insert_book_validations(dict_values)
+        self.assertEqual("Formato inválido!", error.exception.args[0])
+
+        mock_book_db.isbn_exists_db.side_effect = [False, True]
+        with self.assertRaises(Exception) as error:
+            dict_values = dict(item_quantity=0, item_price=1, page_quantity=1, format="Físico", weight=1, size=dict(height=1, lenght=1, width=1), published_at="01/10/2020")
+            dict_values['isbn-10'] = "1111111111"
+            dict_values['isbn-13'] = "7777777777777"
+            insert_book_validations(dict_values)
+        self.assertEqual("Isbn 13 já cadastrado.", error.exception.args[0])
 
 
 
