@@ -7,7 +7,7 @@ def read_all_categories() -> dict:
         categories = category_db.read_all_categories_db()
         return dict(status=200, result_data=categories)
     except Exception as error:
-        return dict(status=500, error=error.args[0], message="Tente novamente mais tarde.")
+        return dict(status=500, error="Nenhuma categoria foi encontrada.", message="Tente novamente mais tarde.")
 
 
 def insert_categories(dict_values: dict) -> dict:
@@ -26,7 +26,7 @@ def insert_categories(dict_values: dict) -> dict:
         except Exception as error:
             return dict(
                 status=400,
-                error=f"Categoria não cadastrada: {error}",
+                error=f"Categoria não cadastrada: {error}.",
                 message="Verifique a categoria informada!"
             )
     else:
