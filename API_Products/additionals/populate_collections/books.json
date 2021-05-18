@@ -25,7 +25,7 @@
             "name": "Físico",
             "digital": false
         },
-        "published_at": "2015-09-15",
+        "published_at": "15/09/2015",
         "item_price": 101.19,
         "item_quantity": 237,
         "rating": 4.66,
@@ -34,19 +34,19 @@
                 "author_name": "Carlos Eduardo Ribeiro",
                 "comment": "Muito bom...",
                 "classification": 5,
-                "created_at": "2021-05-11"
+                "created_at": "11/05/2021"
             },
             {
                 "author_name": "Gabriela Cristofolini",
                 "comment": "Excelente didática...",
                 "classification": 4,
-                "created_at": "2021-05-11"
+                "created_at": "11/05/2021"
             },
             {
                 "author_name": "Jeff Silva",
                 "comment": "Autor explica muito...",
                 "classification": 5,
-                "created_at": "2021-05-11"
+                "created_at": "11/05/2021"
             }
         ],
         "size": {
@@ -85,7 +85,7 @@
             "name": "Físico",
             "digital": false
         },
-        "published_at": "2017-12-12",
+        "published_at": "12/12/2017",
         "item_price": 96.95,
         "item_quantity": 546,
         "rating": 4.66,
@@ -94,7 +94,7 @@
                 "author_name": "Carlos Eduardo Ribeiro",
                 "comment": "Muito bom...",
                 "classification": 5,
-                "created_at": "2021-05-11"
+                "created_at": "11/05/2021"
             }
         ],
         "size": {
@@ -134,7 +134,7 @@
             "name": "Físico",
             "digital": false
         },
-        "published_at": "2019-04-01",
+        "published_at": "01/04/2019",
         "item_price": 68.04,
         "item_quantity": 198,
         "rating": 5,
@@ -143,7 +143,7 @@
                 "author_name": "Carlos Eduardo Ribeiro",
                 "comment": "Muito bom...",
                 "classification": 5,
-                "created_at": "2021-05-11"
+                "created_at": "11/05/2021"
             }
         ],
         "size": {
@@ -183,7 +183,7 @@
             "name": "Físico",
             "digital": false
         },
-        "published_at": "2017-09-05",
+        "published_at": "05/09/2017",
         "item_price": 35.12,
         "item_quantity": 224,
         "rating": 0,
