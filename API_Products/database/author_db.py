@@ -1,5 +1,5 @@
-from API_Products.additionals.functions import convert_object_id_to_string
-from API_Products.database.db import get_db
+from additionals.functions import convert_object_id_to_string
+from database.db import get_db
 
 
 def insert_author_db(dict_values: dict):
@@ -33,7 +33,7 @@ def delete_authors_db(dict_values: dict) -> str:
     if affected_rows:
         return "Registro excluído com sucesso!"
     else:
-        raise Exception("Nenhum editor encontrado!")
+        raise Exception("Nenhum autor encontrado!")
 
 
 def exist_author(dict_values) -> bool:
