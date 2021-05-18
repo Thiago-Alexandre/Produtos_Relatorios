@@ -2,7 +2,7 @@ import re
 
 from pymongo.errors import CollectionInvalid, PyMongoError
 
-from database.db import get_db
+from API_Products.database.db import get_db
 
 
 # Returns a country name list or None if nothing is find:

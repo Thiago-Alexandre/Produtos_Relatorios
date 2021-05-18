@@ -1,4 +1,4 @@
-from database import author_db, country_db
+from API_Products.database import author_db, country_db
 
 
 def author_insert_validation(dict_values: dict):
@@ -26,7 +26,7 @@ def delete_author(dict_values: dict) -> dict:
         if not author_db.exist_author(dict_values):
             authors = author_db.delete_authors_db(dict_values)
         else:
-            raise Exception("A autor já está sendo utilizado, não é possível deletá-lo agora.")
+            raise Exception("O autor já está sendo utilizado, não é possível deletá-lo agora.")
         return dict(status=200, text=authors)
     except Exception as error:
         return dict(status=400, text=error.args[0])
