@@ -13,6 +13,7 @@ def insert_book(dict_values: dict) -> dict:
 
 
 def insert_book_validations(dict_values: dict):
+
     if float(dict_values['item_price']) <= 0:
         raise Exception("O preço deve ser maior que zero.")
     elif int(dict_values['item_quantity']) < 0:

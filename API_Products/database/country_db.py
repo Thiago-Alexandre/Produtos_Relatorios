@@ -27,7 +27,7 @@ def search_country(name_country: str) -> dict or None:
     try:
         db = get_db()
         country = db.country
-        regx = re.compile(f"^{name_country}", re.IGNORECASE)
+        regx = re.compile(f"^{name_country}$", re.IGNORECASE)
         return country.find_one({"name": regx}, {"_id": 0})
 
     except CollectionInvalid as error:
