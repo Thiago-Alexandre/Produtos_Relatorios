@@ -10,7 +10,6 @@ def generate_log_data(request: Request, response: dict) -> dict:
         access_key = request.headers.get("Access-Key")
         user = list(KEYS.keys())[list(KEYS.values()).index(access_key)]
     else:
-        # user = "Anonymous"
         user = "Other"
 
     log_data = dict(
@@ -19,9 +18,10 @@ def generate_log_data(request: Request, response: dict) -> dict:
         user=user,
         path=request.path,
         method=request.method,
-        body_request=dict(request.json),
-        status=response['status']
+        status=response['status'],
+        body_request=str(request.json)
     )
+
     if "error" in list(response.keys()):
         log_data["error"] = response["error"]
 
