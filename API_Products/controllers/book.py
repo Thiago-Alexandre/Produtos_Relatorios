@@ -12,6 +12,18 @@ def insert_book(dict_values: dict) -> dict:
         return dict(status=400, error=error.args[0], message="Verifique os dados informados.")
 
 
+def get_book_list() -> dict:
+    try:
+        result_data = book_db.read_all_books_db()
+
+        if result_data:
+            return dict(status=200, result_data=result_data)
+        else:
+            raise Exception("Não foi possível acessar a base de dados!")
+    except Exception as error:
+        return dict(status=500, error=error.args[0], message="Tente novamente mais tarde.")
+
+
 def insert_book_validations(dict_values: dict):
 
     if float(dict_values['item_price']) <= 0:
