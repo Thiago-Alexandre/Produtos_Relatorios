@@ -6,16 +6,27 @@ def author_insert_validation(dict_values: dict):
         exist_country = country_db.search_country(dict_values["country"])
         if exist_country:
             text = author_db.insert_author_db(dict_values)
-            return dict(status=200, text=text)
+            return dict(status=200, result_data=text)
         else:
-            return dict(status=400, text="O país não foi encontrado!")
+            return dict(status=400, error="O país não foi encontrado!", message="Verifique o dados informados.")
     except Exception as error:
-            return dict(status=400, text=error.args[0])
+        return dict(status=400, text=error.args[0], message="Verifique os dados informados.")
 
 
 def author_read_all_validation():
-        try:
-            authors = author_db.read_all_authors_db()
-            return dict(status=200, text=authors)
-        except Exception as error:
-            return dict(status=400, text=error.args[0])
+    try:
+        authors = author_db.read_all_authors_db()
+        return dict(status=200, result_data=authors)
+    except Exception as error:
+        return dict(status=400, error=error.args[0], message="Tente novamente mais tarde.")
+
+
+def delete_author(dict_values: dict) -> dict:
+    try:
+        if not author_db.exist_author(dict_values):
+            authors = author_db.delete_authors_db(dict_values)
+        else:
+            raise Exception("Não foi possível deletar o autor.")
+        return dict(status=200, result_data=authors)
+    except Exception as error:
+        return dict(status=400, error=error.args[0], message="O autor já está sendo utilizado.")
