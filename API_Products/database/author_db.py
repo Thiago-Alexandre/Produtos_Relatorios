@@ -33,7 +33,7 @@ def delete_authors_db(dict_values: dict) -> str:
     if affected_rows:
         return "Registro excluído com sucesso!"
     else:
-        raise Exception("Nenhum editor encontrado!")
+        raise Exception("Nenhum autor encontrado!")
 
 
 def exist_author(dict_values) -> bool:
