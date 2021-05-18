@@ -1,5 +1,6 @@
 from additionals.functions import convert_object_id_to_string
-from db import get_db
+from bson.objectid import ObjectId
+from database.db import get_db
 
 
 def insert_publishers_db(dict_values: dict) -> str:
@@ -27,9 +28,46 @@ def delete_publishers_db(dict_values: dict) -> str:
     publisher_name = dict_values['name']
     publisher_country = dict_values['country']    
 
-    affected_rows = DB.publisher.delete_one({"name": publisher_name, "country": publisher_country}).deleted_count
+    db = get_db()
+    affected_rows = db.publisher.delete_one({"name": publisher_name, "country": publisher_country}).deleted_count
 
     if affected_rows:
         return "Registro excluído com sucesso!"
     else:
         raise Exception("Nenhuma editora encontrada!")
+
+
+def update_publisher_db(dict_values: dict) -> str:
+    db = get_db()
+
+    id = ObjectId(dict_values["_id"])
+    del dict_values["_id"]
+
+    affected_rows = db.publisher.update_one({"_id":id}, {"$set", dict_values}).matched_count
+
+    if affected_rows:
+        return "Registro excluído com sucesso!"
+    else:
+        raise Exception("Nenhuma editora encontrada!")
+
+    
+def exists_publisher(dict_values) -> bool:
+    db = get_db()    
+    
+    if db.book.find_one({"publisher.name": dict_values["name"]}):
+        return True
+    else:
+        return False
+
+
+def validate_publisher(publisher_name) -> bool:    
+    values = dict(name=publisher_name)
+
+    db = get_db()
+
+    validate = db.publisher.count_documents(values, {})    
+     
+    if validate > 0:
+        return True
+    else:
+        return False
