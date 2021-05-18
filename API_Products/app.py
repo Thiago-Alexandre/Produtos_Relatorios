@@ -1,14 +1,14 @@
 from flask import Flask, request
 
-from API_Products.controllers import category, publisher_controller, author_controller, book
+from API_Products.controllers import category, publisher_controller, author_controller, book, country_controller, \
+    language_book_controller, format_controller
 from API_Products.database.auth import KEYS
 
 from book_logs.book_logs import generate_log_data
-from book_logs.logging_db import insert_log_db
+from book_logs.logging_db import *
+from database.auth import KEYS
 
 app = Flask(__name__)
-
-#Rotas categorias
 
 
 @app.route("/categories", methods=["GET"])
@@ -126,6 +126,60 @@ def read_books():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         response = book.get_book_list()
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print("Logging error: " + err.args[0])
+
+    return response, response["status"]
+
+
+@app.route("/countries", methods=["GET"])
+def read_countries():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        response = country_controller.get_country_name_list()
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print("Logging error: " + err.args[0])
+
+    return response, response["status"]
+
+
+@app.route("/languages", methods=["GET"])
+def read_language_books():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        response = language_book_controller.get_language_book_list()
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print("Logging error: " + err.args[0])
+
+    return response, response["status"]
+
+
+@app.route("/formats", methods=["GET"])
+def read_format_books():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        response = format_controller.get_format_list()
 
     try:
         log_data = generate_log_data(request, response)

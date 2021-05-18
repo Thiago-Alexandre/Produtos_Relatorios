@@ -49,7 +49,8 @@ def delete_categories(dict_values: dict):
 
 
 def update_categories(dict_values: dict):
-    if "name" not in list(dict_values.keys()) or dict_values["name"].strip() == "":
+    keys = list(dict_values.keys())
+    if "old_name" not in keys or "new_name" not in keys or not dict_values["old_name"] or not dict_values["new_name"]:
         return dict(status=400, error="Valor inserido inválido.", message="Verifique os dados informados.")
 
     dict_values["new_name"] = dict_values["new_name"].capitalize()

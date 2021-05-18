@@ -66,15 +66,14 @@ class TestControllerCategories(TestCase):
 
         mock_get_db()["category"].find_one.side_effect = [True, False, False]
 
-        result2 = update_categories(dict(new_name="B"))
+        result2 = update_categories(dict(new_name="B", old_name="A"))
         expected = dict(status=400, erro="Já existe uma categoria com este nome.",
                         message="Verifique os dados informados.")
         self.assertEqual(result2, expected)
 
-        # mock_category_db.update_categories_db.return_value = 0
-        # result3 = update_categories(dict(old_name="A", new_name="B"))
-        # self.assertEqual(result3, dict(status=500, error="Erro interno.", message="A categoria não foi modificada."))
-        #
-        # mock_category_db.update_categories_db.return_value = 0
-        # result4 = update_categories(dict(old_name="A", new_name="B"))
-        # self.assertEqual(result4, dict(status=200, message="Categoria alterada com sucesso."))
+        mock_category_db.update_categories_db.side_effect = [False, True]
+        result3 = update_categories(dict(old_name="A", new_name="B"))
+        self.assertEqual(result3, dict(status=500, error="Erro interno.", message="A categoria não foi modificada."))
+
+        result4 = update_categories(dict(old_name="A", new_name="B"))
+        self.assertEqual(result4, dict(status=200, message="Categoria alterada com sucesso."))
