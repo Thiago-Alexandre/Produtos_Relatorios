@@ -51,24 +51,14 @@ def update_categories(dict_values: dict):
     dict_values["new_name"] = dict_values["new_name"].capitalize()
     db = get_db()
 
-    if False:
-        pass
-    # if db["category"].find_one({"name": dict_values["new_name"]}):
-    #     return dict(status=400, text="O nome requerido já está sendo utilizado, não é possível atribuí-lo novamente.")
-    else:
-        # updated_category = category_db.update_categories_db(dict_values)
-        updated_category = True
-        if not updated_category:
-            return dict(status=400, text="Não foi possível alterar a categoria.")
-        else:
-            db["book"].update_many({}, {"$set": {"category.$[element]": dict_values["new_name"]}}, False,
-            [{"element": dict_values["old_name"]}])
-            return dict(status=200, text="Categoria alterada com sucesso.")
-            #
-        # db.book.updateMany(
-        #     {},
-        #     {$set: {"category.$[element]": "Info"}},
-        # {arrayFilters: [{"element": "Informática"}]}
-        # )
+    if db["category"].find_one({"name": dict_values["new_name"]}):
+        return dict(status=400, text="O nome requerido já está sendo utilizado, não é possível atribuí-lo novamente.")
 
-print(update_categories(dict(old_name="Putaria", new_name="Putaria2")))
+    updated_category = category_db.update_categories_db(dict_values)
+    if not updated_category:
+        return dict(status=400, text="Não foi possível alterar a categoria.")
+    else:
+        db["book"].update_many({}, {"$set": {"category.$[element]": dict_values["new_name"]}},
+                               array_filters=[{"element": dict_values["old_name"]}])
+        return dict(status=200, text="Categoria alterada com sucesso.")
+
