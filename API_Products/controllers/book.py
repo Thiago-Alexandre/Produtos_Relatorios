@@ -103,7 +103,7 @@ def add_comment_book(comment_values: dict):
         for c in book["comments"]:
             total_classification += c["classification"]
         book["rating"] = total_classification / quantity_comments
-        book_db.update_book(book)
+        book_db.update_book_db(book)
         return dict(status=200, text="Comentário adicionado com sucesso!")
     except Exception as error:
         return dict(status=400, text=f"Erro: {error}")
