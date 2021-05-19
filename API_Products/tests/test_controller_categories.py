@@ -1,9 +1,9 @@
 from unittest import mock, TestCase
-from API_Products.controllers.category import *
+from controllers.category import *
 
 
 class TestControllerCategories(TestCase):
-    @mock.patch("API_Products.controllers.category.category_db")
+    @mock.patch("controllers.category.category_db")
     def test_read_all_categories_works(self, mock_category):
         mock_category.read_all_categories_db.return_value = []
 
@@ -14,8 +14,8 @@ class TestControllerCategories(TestCase):
         result2 = read_all_categories()
         self.assertEqual(result2, dict(status=500, error="Nenhuma categoria foi encontrada.", message="Tente novamente mais tarde."))
 
-    @mock.patch("API_Products.controllers.category.get_db")
-    @mock.patch("API_Products.controllers.category.category_db")
+    @mock.patch("controllers.category.get_db")
+    @mock.patch("controllers.category.category_db")
     def test_insert_categories_works(self, mock_category, mock_db):
         result1 = insert_categories(dict(name=""))
         self.assertEqual(result1, dict(status=400, error="Valor inserido inválido.", message="Verifique os dados informados."))
@@ -37,8 +37,8 @@ class TestControllerCategories(TestCase):
         self.assertEqual(result4, dict(status=400, error="Categoria não cadastrada.",
                                        message="A categoria já existe no sistema."))
 
-    @mock.patch("API_Products.controllers.category.category_db")
-    @mock.patch("API_Products.controllers.category.get_db")
+    @mock.patch("controllers.category.category_db")
+    @mock.patch("controllers.category.get_db")
     def test_delete_categories_works(self, mock_find, mock_category_db):
         result1 = delete_categories(dict(name=""))
         self.assertEqual(result1,
@@ -57,8 +57,8 @@ class TestControllerCategories(TestCase):
         result4 = delete_categories(dict(name="A"))
         self.assertEqual(result4, dict(status=500, error="Erro interno.", message="A categoria não foi deletada."))
 
-    @mock.patch("API_Products.controllers.category.category_db")
-    @mock.patch("API_Products.controllers.category.get_db")
+    @mock.patch("controllers.category.category_db")
+    @mock.patch("controllers.category.get_db")
     def test_update_categories_works(self, mock_get_db, mock_category_db):
         result1 = update_categories(dict(old_name="", new_name=""))
         self.assertEqual(result1,
