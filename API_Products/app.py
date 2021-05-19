@@ -1,9 +1,12 @@
 from flask import Flask, request
 
-from book_logs.book_logs import generate_log_data
-from book_logs.logging_db import insert_log_db
-from controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
+
+from API_Products.controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
     language_book_controller, format_controller
+from API_Products.database.auth import KEYS
+
+from book_logs.book_logs import generate_log_data
+from book_logs.logging_db import *
 from database.auth import KEYS
 
 app = Flask(__name__)
@@ -32,6 +35,19 @@ def insert_categories():
         response = category.insert_categories(dict_values)
 
     return response, response["status"]
+
+
+@app.route("/categories/delete", methods=["DELETE"])
+def delete_categories():
+    header = dict(request.headers)
+    if header["Senha"] not in KEYS:
+        return dict(text="Chave de acesso inválida."), 400
+    dict_values = request.get_json()
+    category_deleted = category.delete_categories(dict_values)
+    status = category_deleted["status"]
+    del category_deleted["status"]
+
+    return category_deleted, status
 
 
 @app.route("/publishers", methods=["GET"])
