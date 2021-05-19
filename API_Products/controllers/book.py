@@ -105,3 +105,18 @@ def finish_purshase(books_cart: list, success: bool) -> dict:
     except Exception as error:
         return dict(status=400, text=f"Erro: {error.args[0]}")
     return dict(status=200, text="Estoque alterado com sucesso!")
+
+
+def add_comment_book(comment_values: dict):
+    try:
+        book = book_db.search_book_for_id(comment_values["id_book"])
+        book["comments"].append(comment_values["comment"])
+        total_classification = 0
+        quantity_comments = len(book["comments"])
+        for c in book["comments"]:
+            total_classification += c["classification"]
+        book["rating"] = total_classification / quantity_comments
+        book_db.update_book_db(book)
+        return dict(status=200, text="Comentário adicionado com sucesso!")
+    except Exception as error:
+        return dict(status=400, text=f"Erro: {error}")

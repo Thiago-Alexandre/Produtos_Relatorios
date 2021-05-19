@@ -1,7 +1,7 @@
 from pymongo.errors import CollectionInvalid, PyMongoError
 from additionals.functions import convert_object_id_to_string
-from bson.objectid import ObjectId
 from database.db import get_db
+from bson.objectid import ObjectId
 
 
 def insert_book_db(dict_values: dict):
@@ -79,3 +79,15 @@ def update_all_publishers_book_db(publishers_field: str, new_value: str):
     else:
         raise Exception("Nenhuma editora encontrada!")        
 
+
+def search_book_for_id(id_book: str) -> dict:
+
+    db = get_db()
+    book = db.book
+    book_saved = book.find_one({"_id": ObjectId(id_book)})
+    book_saved["_id"] = str(book_saved["_id"])
+
+    if book_saved:
+        return book_saved
+    else:
+        raise Exception("Nenhum livro encontrado!")

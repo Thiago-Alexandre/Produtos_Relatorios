@@ -8,7 +8,7 @@ from database.db import get_db
 def populate_book():
     book_list = []
 
-    with open("books.json") as json_file_books:
+    with open("books.json", encoding="utf8") as json_file_books:
         book_list = load(json_file_books)
 
     try:
