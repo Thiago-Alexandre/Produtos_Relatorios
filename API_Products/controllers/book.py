@@ -59,7 +59,7 @@ def insert_book_validations(dict_values: dict):
     else:
         raise Exception("Formato inválido!")
 
-        
+
 def verify_stock(list_shopping_cart_values):
     list_books_values = book_db.search_books_for_id(list_shopping_cart_values)
     list_rejected_items = []

@@ -17,3 +17,25 @@ def read_all_categories_db() -> list:
     if categories_list:
         return categories_list
     raise Exception("Nenhuma categoria encontrada.")
+
+
+def delete_categories_db(dict_values: dict):
+    if dict_values:
+        db = get_db()
+        deleted = db["category"].delete_one(dict_values)
+        return deleted.deleted_count
+    else:
+        raise Exception("Solicitação inválida.")
+
+
+def update_categories_db(dict_values: dict):
+    db = get_db()
+    affected_rows = db["category"].update_one({"name": dict_values["old_name"]},
+                                              {"$set": {"name": dict_values["new_name"]}}).matched_count
+
+    if affected_rows:
+        return "Categoria alterada com sucesso"
+    else:
+        raise Exception("Nenhuma categoria encontrada.")
+
+

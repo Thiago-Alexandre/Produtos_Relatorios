@@ -1,11 +1,11 @@
-from API_Products.controllers.publisher_controller import *
+from API_Products.controllers.publisher import *
 from unittest import mock, TestCase
 
 
 class TestPublisher(TestCase):
 
-    @mock.patch("API_Products.controllers.publisher_controller.country_db")
-    @mock.patch("API_Products.controllers.publisher_controller.publisher_db")
+    @mock.patch("API_Products.controllers.publisher.country_db")
+    @mock.patch("API_Products.controllers.publisher.publisher_db")
     def test_insert_publisher_works(self, mock_publisher, mock_country):
 
             mock_country.search_country.return_value = False
@@ -21,9 +21,8 @@ class TestPublisher(TestCase):
             result3 = insert_publisher(dict())
             self.assertEqual(result3, {'status': 400, 'text': 'country'})
 
-    # ===================================================================================
 
-    @mock.patch("API_Products.controllers.publisher_controller.publisher_db")
+    @mock.patch("API_Products.controllers.publisher.publisher_db")
     def test_read_all_publisher_works(self, mock_publisher):
         mock_publisher.read_all_publishers_db.return_value = []
 
@@ -33,7 +32,8 @@ class TestPublisher(TestCase):
         delattr(mock_publisher, "read_all_publishers_db")
         result2 = read_all_publishers()
         self.assertEqual(result2, dict(status=400, text="read_all_publishers_db"))
-    
+
+
     # ===================================================================================
 
     @mock.patch("API_Products.controllers.publisher_controller.book_db")
@@ -49,7 +49,7 @@ class TestPublisher(TestCase):
         mock_publisher.validate_publisher.return_value = True
         result = update_publisher(dict(name="", new_value=""))
         self.assertEqual(result, {'status': 400, 'text': 'O nome requerido já está sendo utilizado, não é possível atribuí-lo novamente.'})
-    
+
     # ===================================================================================
 
     @mock.patch("API_Products.controllers.publisher_controller.publisher_db")
@@ -63,4 +63,3 @@ class TestPublisher(TestCase):
         mock_publisher.exists_publisher.return_value = True
         result = delete_publisher(dict())
         self.assertEqual(result, {'status': 400, 'text': 'A editora está sendo utilizada, não é possível deletá-la.'})
-        
