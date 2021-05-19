@@ -17,7 +17,6 @@ def author_insert_validation(dict_values: dict):
     ]
     if not all(validations):
         return dict_response
-
     try:
         exist_country = country_db.search_country(dict_values["country"])
         if exist_country:
