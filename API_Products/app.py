@@ -1,6 +1,7 @@
 from flask import Flask, request
 
-from API_Products.controllers import category, publisher_controller, author_controller, book, country_controller, \
+
+from API_Products.controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
     language_book_controller, format_controller
 from API_Products.database.auth import KEYS
 
@@ -107,7 +108,7 @@ def insert_books():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         body_request = request.get_json()
-        response = book.insert_book(body_request)
+        response = book_controller.insert_book(body_request)
 
     try:
         log_data = generate_log_data(request, response)
@@ -125,7 +126,7 @@ def read_books():
     if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
-        response = book.get_book_list()
+        response = book_controller.get_book_list()
 
     try:
         log_data = generate_log_data(request, response)

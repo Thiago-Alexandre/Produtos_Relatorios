@@ -8,7 +8,7 @@ def insert_publisher(dict_values: dict) -> dict:
     dict_response = dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
     if not expected.issubset(received):
         return dict_response
-    elif len(dict_values["name"]) > 0 or len(dict_values["country"]) > 0:
+    elif len(dict_values["name"]) == 0 or len(dict_values["country"]) == 0:
         return dict_response
 
     try:

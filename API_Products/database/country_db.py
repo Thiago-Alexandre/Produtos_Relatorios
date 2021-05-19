@@ -1,7 +1,5 @@
 import re
-
 from pymongo.errors import CollectionInvalid, PyMongoError
-
 from database.db import get_db
 
 
