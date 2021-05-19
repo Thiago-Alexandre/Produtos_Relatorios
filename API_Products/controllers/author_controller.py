@@ -2,6 +2,21 @@ from database import author_db, country_db
 
 
 def author_insert_validation(dict_values: dict):
+    # Checks the body request:
+    received = set(dict_values.keys())
+    expected = {"name", "lastname", "country"}
+    dict_response = dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
+
+    if not expected.issubset(received):
+        return dict_response
+
+    validations = [
+        len(dict_values["name"]) > 0,
+        len(dict_values["lastname"]) > 0,
+        len(dict_values["country"]) > 0
+    ]
+    if not all(validations):
+        return dict_response
     try:
         exist_country = country_db.search_country(dict_values["country"])
         if exist_country:
