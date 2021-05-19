@@ -22,7 +22,6 @@ def author_insert_validation(dict_values: dict):
         exist_country = country_db.search_country(dict_values["country"])
         if exist_country:
             text = author_db.insert_author_db(dict_values)
-            print(text)
             return dict(status=200, result_data=text)
         else:
             return dict(status=400, error="O país não foi encontrado!", message="Verifique o dados informados.")

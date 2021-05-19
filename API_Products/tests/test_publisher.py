@@ -7,19 +7,21 @@ class TestPublisher(TestCase):
     @mock.patch("API_Products.controllers.publisher_controller.country_db")
     @mock.patch("API_Products.controllers.publisher_controller.publisher_db")
     def test_insert_publisher_works(self, mock_publisher, mock_country):
-
-            mock_country.search_country.return_value = False
+            mock_country.search_country.side_effect = [False, True, True]
+            mock_publisher.insert_publishers_db.return_value = "Success"
 
             result = insert_publisher(dict(name="test", country="test"))
-            self.assertEqual(result, {'status': 400, 'text': 'País não foi encontrado!'})
-
-            mock_country.search_country.return_value = True
-            mock_publisher.insert_publishers_db.return_value = "Success"
             result2 = insert_publisher(dict(name="test", country="test"))
-            self.assertEqual(result2, {'status': 200, 'text': "Success"})
-
             result3 = insert_publisher(dict())
-            self.assertEqual(result3, {'status': 400, 'text': 'country'})
+
+            expected = dict(status=400, error="País não foi encontrado!", message="Verifique os dados informados.")
+            expected2 = dict(status=200, result_data="Success")
+            expected3 = dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
+
+            self.assertEqual(result, expected)
+            self.assertEqual(result2, expected2)
+            self.assertEqual(result3, expected3)
+
 
     # ===================================================================================
 
@@ -28,11 +30,14 @@ class TestPublisher(TestCase):
         mock_publisher.read_all_publishers_db.return_value = []
 
         result = read_all_publishers()
-        self.assertEqual(result, dict(status=200, text=[]))
-
         delattr(mock_publisher, "read_all_publishers_db")
         result2 = read_all_publishers()
-        self.assertEqual(result2, dict(status=400, text="read_all_publishers_db"))
+
+        expected = dict(status=200, result_data=[])
+        expected2 = dict(status=400, error="read_all_publishers_db", message="Tente novamente mais tarde.")
+
+        self.assertEqual(result, expected)
+        self.assertEqual(result2, expected2)
     
     # ===================================================================================
 
