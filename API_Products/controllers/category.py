@@ -1,5 +1,5 @@
-from API_Products.database import category_db
-from API_Products.database.db import get_db
+from database import category_db
+from database.db import get_db
 
 
 def read_all_categories() -> dict:
