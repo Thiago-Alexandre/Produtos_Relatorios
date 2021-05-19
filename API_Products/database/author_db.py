@@ -39,7 +39,8 @@ def delete_authors_db(dict_values: dict) -> str:
 def exist_author(dict_values) -> bool:
     db = get_db()
 
-    if db.book.find_one({"author.name": dict_values["name"], "author.lastname": dict_values["lastname"], "author.country": dict_values["country"]}):
+    if db.book.find_one({"author.name": dict_values["name"], "author.lastname": dict_values["lastname"],
+                         "author.country": dict_values["country"]}):
         return True
     else:
         return False
