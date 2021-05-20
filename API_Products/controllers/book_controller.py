@@ -219,15 +219,21 @@ def validate_book(body_request: dict):
 
 
 def verify_stock(list_shopping_cart_values):
-    list_books_values = book_db.search_books_by_id(*list_shopping_cart_values)
+    list_ids = list(map(lambda x: x['_id'], list_shopping_cart_values))
+
+    list_books_values = book_db.search_books_by_id(*list_ids)
     list_rejected_items = []
     total_price_items = 0.0
     digital_value = True
 
     for i in range(len(list_shopping_cart_values)):
         if list_shopping_cart_values[i]["quantity_purchased"] <= list_books_values[i]["item_quantity"]:
-            total_price_items += list_books_values[i]["item_price"]
-            if not list_books_values[i]["format"]["digital"]:
+            total_price_items += list_books_values[i]["item_price"]*list_shopping_cart_values[i]["quantity_purchased"]
+
+            format_name = list_books_values[i]["format"]
+
+            is_digital = list(filter(lambda x: x["name"] == format_name, get_book_format_list_db()))[0]
+            if not is_digital["digital"]:
                 digital_value = False
         else:
             list_shopping_cart_values[i]["quantity_purchased"] = list_books_values[i]["item_quantity"]
@@ -253,14 +259,24 @@ def reserve_books(list_shopping_cart_values, list_books_values):
     return "Reserva realizada com sucesso!"
 
 
-def finish_purshase(books_cart: list, success: bool) -> dict:
+def finish_purchase(books_cart: list, success: bool) -> dict:
+    list_ids = list(map(lambda x: x['_id'], books_cart))
     try:
-        books_saved = book_db.search_books_by_id(*books_cart)
+        books_saved = book_db.search_books_by_id(*list_ids)
         for i in range(len(books_saved)):
-            if not success:
+            if success:
+                if books_saved[i]["reserve_quantity"] >= books_cart[i]["quantity_purchased"]:
+                    books_saved[i]["reserve_quantity"] -= books_cart[i]["quantity_purchased"]
+                    book_db.update_book_db(books_saved[i])
+                else:
+                    return dict(
+                        status=400,
+                        error="Erro ao finalizar a compra.",
+                        message="A quantidade de livros informada está incorreta."
+                    )
+            else:
                 books_saved[i]["item_quantity"] += books_cart[i]["quantity_purchased"]
-            books_saved[i]["reserve_quantity"] -= books_cart[i]["quantity_purchased"]
-            book_db.update_book_db(books_saved[i])
+
     except Exception as error:
-        return dict(status=400, text=f"Erro: {error.args[0]}")
-    return dict(status=200, text="Estoque alterado com sucesso!")
+        return dict(status=400, error=f"Dados incompletos: {error.args[0]}", message="Verifique os dados informados.")
+    return dict(status=200, message="Compra finalizada! Estoque alterado com sucesso.")
