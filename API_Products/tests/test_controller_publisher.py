@@ -67,8 +67,9 @@ class TestPublisher(TestCase):
                                       message="Tente novamente mais tarde."))
 
     @mock.patch("controllers.publisher_controller.book_db")
+    @mock.patch("controllers.publisher_controller.country_db")
     @mock.patch("controllers.publisher_controller.publisher_db")
-    def test_update_publisher_db_works(self, mock_publisher, mock_book):
+    def test_update_publisher_db_works(self, mock_publisher, mock_country, mock_book):
         """
         Teste do método controller para alterar dados das editoras.
 
@@ -86,29 +87,31 @@ class TestPublisher(TestCase):
                                            message="Verifique os dados informados."))
 
         # Testa a verificação de editora já salva.
-        mock_publisher.search_publisher.return_value = dict(name="")
+        mock_publisher.validate_publisher.return_value = True
+        result_data = update_publisher(dict(_id="Teste", name="Teste", country="Teste"))
+        self.assertEqual(result_data, dict(status=400, error="Editora já salva!",
+                                           message="Verifique os dados informados."))
+
+        # Testa a verificação de país cadastrado.
+        mock_publisher.validate_publisher.return_value = False
+        mock_country.search_country.return_value = False
+        result_data = update_publisher(dict(_id="Teste", name="Teste", country="Teste"))
+        self.assertEqual(result_data, dict(status=400, error="País não foi encontrado!",
+                                           message="Verifique os dados informados."))
+
+        # Testa a alteração da editora.
+        mock_country.search_country.return_value = True
+        mock_publisher.search_publisher.return_value = True
+        mock_publisher.update_publisher_db.return_value = "Editora alterada com sucesso!"
         mock_book.update_all_publishers_book_db.return_value = True
+        result_data = update_publisher(dict(_id="Teste", name="Teste", country="Teste"))
+        self.assertEqual(result_data, dict(status=200, result_data="Editora alterada com sucesso!"))
 
-        expected = dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
-        result_data = insert_publisher(dict())
-        self.assertEqual(result_data, expected)
-
-        mock_validate_publisher.side_effect = [True, False, False]
-
-        expected = dict(status=400, message="Verifique os dados informados.",
-                        error="O nome requerido já está sendo utilizado, não é possível atribuí-lo novamente.")
-        result_data = update_publisher(dict(_id="teste", name="test", country="test"))
-        self.assertEqual(result_data, expected)
-
-        mock_update_publisher.return_value = "Editora alterada com sucesso!"
-        expected = dict(status=200, result_data="Editora alterada com sucesso!")
-        result_data = update_publisher(dict(_id="teste", name="test", country="test"))
-        self.assertEqual(result_data, expected)
-
-        mock_update_publisher.side_effect = Exception("Nenhuma editora encontrada!")
-        expected = dict(status=400, error="Nenhuma editora encontrada!", message="Verifique os dados informados.")
-        result_data = update_publisher(dict(_id="teste", name="test", country="test"))
-        self.assertEqual(result_data, expected)
+        # Testa o lançamento de exceções
+        mock_publisher.update_publisher_db.side_effect = Exception("Ocorreu um erro ao alterar a editora.")
+        result_data = update_publisher(dict(_id="Teste", name="Teste", country="Teste"))
+        self.assertEqual(result_data, dict(status=400, error="Ocorreu um erro ao alterar a editora.",
+                                           message="Verifique os dados informados."))
 
     @mock.patch("controllers.publisher_controller.publisher_db")
     def test_delete_publisher(self, mock_publisher):
@@ -131,7 +134,7 @@ class TestPublisher(TestCase):
         self.assertEqual(result_data, dict(status=200, result_data="Editora excluída com sucesso!"))
 
         # Testa o lançamento de exceções
-        mock_publisher.delete_publishers_db.side_effect = Exception("Nenhuma editora encontrada!")
+        mock_publisher.delete_publishers_db.side_effect = Exception("Ocorreu um erro ao excluir a editora!")
         result_data = delete_publisher(dict())
-        self.assertEqual(result_data, dict(status=400, error="Nenhuma editora encontrada!",
+        self.assertEqual(result_data, dict(status=400, error="Ocorreu um erro ao excluir a editora!",
                                            message="Verifique os dados informados."))

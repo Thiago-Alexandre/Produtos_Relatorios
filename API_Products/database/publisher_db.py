@@ -22,30 +22,31 @@ def read_all_publishers_db() -> list:
 
         
 def delete_publishers_db(dict_values: dict) -> str:
-    db = get_db()
-    affected_rows = db.publisher.delete_one({"name": dict_values['name'],
-                                             "country": dict_values['country']}).deleted_count
-    if affected_rows:
+    try:
+        db = get_db()
+        db.publisher.delete_one({"name": dict_values['name'], "country": dict_values['country']})
         return "Editora excluída com sucesso!"
-    raise Exception("Nenhuma editora encontrada!")
+    except Exception:
+        raise Exception("Ocorreu um erro ao excluir a editora!")
 
 
 def update_publisher_db(dict_values: dict) -> str:
-    db = get_db()
-    id_publisher = ObjectId(dict_values["_id"])
-    del dict_values["_id"]
-    affected_rows = db.publisher.update_one({"_id": id_publisher}, {"$set", dict_values}).matched_count
-    if affected_rows:
+    try:
+        db = get_db()
+        id_publisher = ObjectId(dict_values["_id"])
+        del dict_values["_id"]
+        print(dict_values)
+        db.publisher.update_one({"_id": id_publisher}, {"$set": dict_values})
         return "Editora alterada com sucesso!"
-    raise Exception("Nenhuma editora encontrada!")
+    except Exception:
+        raise Exception("Ocorreu um erro ao alterar a editora!")
 
     
 def exists_publisher(dict_values) -> bool:
     db = get_db()
     if db.book.find_one({"publisher.name": dict_values["name"], "publisher.country": dict_values["country"]}):
         return True
-    else:
-        return False
+    return False
 
 
 def validate_publisher(dict_values) -> bool:
@@ -53,8 +54,7 @@ def validate_publisher(dict_values) -> bool:
     validate = db.publisher.count_documents(dict_values, {})
     if validate > 0:
         return True
-    else:
-        return False
+    return False
 
 
 def search_publisher(id_publisher: str) -> dict:
@@ -65,5 +65,4 @@ def search_publisher(id_publisher: str) -> dict:
 
     if publisher_saved:
         return publisher_saved
-    else:
-        raise Exception("Nenhuma editora encontrada!")
+    raise Exception("Nenhuma editora encontrada!")

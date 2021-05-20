@@ -67,13 +67,16 @@ def update_publisher(dict_values) -> dict:
         return dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
 
     try:
+        print(publisher_db.validate_publisher(dict_values))
         if publisher_db.validate_publisher(dict_values):
             return dict(status=400, error="Editora já salva!", message="Verifique os dados informados.")
+        print(country_db.search_country(dict_values['country']))
         if not country_db.search_country(dict_values['country']):
             return dict(status=400, error="País não foi encontrado!", message="Verifique os dados informados.")
+        print("passou")
         old_publisher = publisher_db.search_publisher(dict_values["_id"])
-        book_db.update_all_publishers_book_db(old_publisher["name"], dict_values['name'])
         publishers = publisher_db.update_publisher_db(dict_values)
+        book_db.update_all_publishers_book_db(old_publisher, dict_values)
         return dict(status=200, result_data=publishers)
     except Exception as error:
         return dict(status=400, error=error.args[0], message="Verifique os dados informados.")
@@ -99,5 +102,5 @@ def delete_publisher(dict_values: dict) -> dict:
         return dict(status=400, error=error.args[0], message="Verifique os dados informados.")
 
 
-publisher_data = dict(name="Amazon", country="Escócia")
-print(delete_publisher(publisher_data))
+# publisher_data = dict(_id="Teste", name="Teste", country="Teste")
+# print(update_publisher(publisher_data))
