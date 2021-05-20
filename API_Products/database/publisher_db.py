@@ -4,11 +4,12 @@ from database.db import get_db
 
 
 def insert_publishers_db(dict_values: dict) -> str:
-    db = get_db()
-    inserted_rows = db.publisher.insert_one(dict_values).inserted_count
-    if inserted_rows:
+    try:
+        db = get_db()
+        db.publisher.insert_one(dict_values)
         return "Editora salva com sucesso!"
-    raise Exception("Ocorreu um erro ao salvar a editora.")
+    except Exception:
+        raise Exception("Ocorreu um erro ao salvar a editora.")
 
 
 def read_all_publishers_db() -> list:

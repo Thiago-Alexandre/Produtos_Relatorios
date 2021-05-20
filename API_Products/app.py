@@ -1,9 +1,9 @@
 from flask import Flask, request
 
 
-from API_Products.controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
+from .controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
     language_book_controller, format_controller
-from API_Products.database.auth import KEYS
+from .database.auth import KEYS
 
 from book_logs.book_logs import generate_log_data
 from book_logs.logging_db import *
