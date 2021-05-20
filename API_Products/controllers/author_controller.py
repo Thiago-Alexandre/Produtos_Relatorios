@@ -17,7 +17,7 @@ def insert_author(dict_values: dict) -> dict:
     received = set(dict_values.keys())
     expected = {"name", "lastname", "country"}
 
-    if expected.symmetric_difference(received) or not dict_values["name"] or not dict_values["lastname"] \
+    if expected != received or not dict_values["name"] or not dict_values["lastname"] \
             or not dict_values["country"]:
         return dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
 
