@@ -74,12 +74,12 @@ def update_book_db(dict_values):
         raise Exception("Nenhum livro encontrado!")
 
 
-def update_all_publishers_book_db(publishers_field: str, new_value: str):
-    db = get_db()
-
-    affected_rows = db.book.update_many({'publisher.name': { '$in':[publishers_field]}}, {'$set':{'publisher.name': new_value}}).matched_count
-
-    if affected_rows:
+def update_all_publishers_book_db(old_publisher: dict, new_publisher: dict) -> str:
+    try:
+        db = get_db()
+        db.book.update_many({'publisher.name': old_publisher["name"], 'publisher.country': old_publisher["country"]},
+                            {'$set': {"publisher.name": new_publisher["name"],
+                                      "publisher.country": new_publisher["country"]}})
         return "Registros alterados com sucesso!"
-    else:
-        raise Exception("Nenhuma editora encontrada!")
+    except Exception:
+        raise Exception("Erro ao atualizar os dados dos livros!")
