@@ -60,7 +60,7 @@ def validate_book(body_request: dict):
 
     # BODY REQUEST VALIDATION:
     error_message = "Invalid body request."
-    default_message = "Verifique que se todos os dados foram informados. "
+    default_message = "Verifique se todos os dados foram informados. "
 
     if expected != received:
         missing_keys = expected - received
@@ -73,7 +73,7 @@ def validate_book(body_request: dict):
             len(body_request["author"]) == 0 or \
             not all(isinstance(val, dict) for val in body_request["author"]):
 
-        default_message = "Dados do autor devem ser uma lista de dicionarios."
+        default_message = "Dados do autor devem ser uma lista de dicionários."
         raise Exception(error_message, default_message)
 
     elif expected_author != set(body_request["author"][0].keys()):
@@ -84,7 +84,7 @@ def validate_book(body_request: dict):
 
     # Validates the publisher information:
     if not isinstance(body_request["publisher"], dict):
-        default_message = "Dados da editora devem ser um dicionario."
+        default_message = "Dados da editora devem ser um dicioáario."
         raise Exception(error_message, default_message)
 
     elif expected_publisher != set(body_request["publisher"].keys()):
@@ -95,7 +95,7 @@ def validate_book(body_request: dict):
 
     # Validate sizes information:
     if type(body_request["size"]) is not dict:
-        default_message = "Dados do tamanho do livro devem ser um dicionario."
+        default_message = "Dados do tamanho do livro devem ser um dicionário."
         raise Exception(error_message, default_message)
 
     elif expected_size != set(body_request["size"].keys()):
@@ -125,7 +125,7 @@ def validate_book(body_request: dict):
         if pub_date > datetime.now():
             default_message = "A data de lançamento informada não é válida."
             raise Exception(error_message, default_message)
-    except Exception as err:
+    except Exception:
         default_message = "A data deve estar em formato ISO: YYYY-mm-dd."
         raise Exception(error_message, default_message)
 
@@ -134,7 +134,7 @@ def validate_book(body_request: dict):
         if item_price <= 0:
             default_message = "O preço do produto deve ser maior que zero."
             raise Exception(error_message, default_message)
-    except Exception as err:
+    except Exception:
         default_message = "O preço do produto deve ser numérico."
         raise Exception(error_message, default_message)
 
@@ -143,8 +143,8 @@ def validate_book(body_request: dict):
         if item_cost_price <= 0:
             default_message = "O preço de custo do produto deve ser maior que zero."
             raise Exception(error_message, default_message)
-    except Exception as err:
-        default_message = "O preço de cursto do produto deve ser numérico."
+    except Exception:
+        default_message = "O preço de custo do produto deve ser numérico."
         raise Exception(error_message, default_message)
 
     if item_cost_price > item_price:
@@ -156,9 +156,9 @@ def validate_book(body_request: dict):
         raise Exception(error_message, default_message)
 
     try:
-        weight = float(body_request["weight"])
+        float(body_request["weight"])
     except ValueError:
-        default_message = "O peso deve ser um valor numerico."
+        default_message = "O peso deve ser um valor numérico."
         raise Exception(error_message, default_message)
 
     if not isinstance(body_request["page_quantity"], int) and not body_request["page_quantity"] > 0:
@@ -178,7 +178,7 @@ def validate_book(body_request: dict):
 
     publisher_list = list(filter(lambda x: x.pop("_id"), read_all_publishers_db()))
     if body_request["publisher"] not in publisher_list:
-        default_message = "Os dados da editora incorretos."
+        default_message = "Os dados da editora estão incorretos."
         raise Exception(error_message, default_message)
 
     fisical_book_formats = get_book_format_list_db()
@@ -198,7 +198,7 @@ def validate_book(body_request: dict):
             raise Exception(error_message, default_message)
         elif book_db.isbn_exists_db(isbn_10):
             error_message = "Cadastro não efetuado."
-            default_message = "Já existe um livro com o ISBN-10 cadastrado."
+            default_message = "Já existe um livro com este ISBN-10 cadastrado."
             raise Exception(error_message, default_message)
     else:
         default_message = "Verifique o ISBN-10 informado."
@@ -211,48 +211,11 @@ def validate_book(body_request: dict):
             raise Exception(error_message, default_message)
         elif book_db.isbn_exists_db(isbn_13):
             error_message = "Cadastro não efetuado."
-            default_message = "Já existe um livro com o ISBN-13 cadastrado."
+            default_message = "Já existe um livro com este ISBN-13 cadastrado."
             raise Exception(error_message, default_message)
     else:
         default_message = "Verifique o ISBN-10 informado."
         raise Exception(error_message, default_message)
-
-
-# def validate_book(dict_values: dict):
-#     if float(dict_values['item_coste_price']) <= 0:
-#         raise Exception("O preço de custo deve ser maior que zero.")
-#     elif float(dict_values['item_price']) <= 0:
-#         raise Exception("O preço deve ser maior que zero.")
-#     elif int(dict_values['item_quantity']) < 0:
-#         raise Exception("A quantidade de livros deve ser maior ou igual a zero.")
-#     elif int(dict_values['page_quantity']) <= 0:
-#         raise Exception("A quantidade de páginas do livro deve ser maior que zero.")
-#
-#     list_of_material_books = ['Físico', 'Braille']
-#     if dict_values['format'] in list_of_material_books:
-#         if float(dict_values['weight']) <= 0:
-#             raise Exception("O peso de um livro físico deve ser maior que zero.")
-#         elif float(dict_values['size']['height']) <= 0:
-#             raise Exception("A altura de um livro físico deve ser maior que zero.")
-#         elif float(dict_values['size']['lenght']) <= 0:
-#             raise Exception("O comprimento de um livro físico deve ser maior que zero.")
-#         elif float(dict_values['size']['width']) <= 0:
-#             raise Exception("A largura de um livro físico deve ser maior que zero.")
-#
-#     if datetime.strptime(dict_values['published_at'], "%d/%m/%Y") > datetime.today():
-#         raise Exception("A data de publicação é inválida.")
-#
-#     if isinstance(dict_values['isbn-10'], str) and len(dict_values['isbn-10']) == 10:
-#         if book_db.isbn_exists_db(dict_values['isbn-10']):
-#             raise Exception("Isbn 10 já cadastrado.")
-#     else:
-#         raise Exception("Formato inválido!")
-#
-#     if isinstance(dict_values['isbn-13'], str) and len(dict_values['isbn-13']) == 13:
-#         if book_db.isbn_exists_db(dict_values['isbn-13']):
-#             raise Exception("Isbn 13 já cadastrado.")
-#     else:
-#         raise Exception("Formato inválido!")
 
 
 def verify_stock(list_shopping_cart_values):
