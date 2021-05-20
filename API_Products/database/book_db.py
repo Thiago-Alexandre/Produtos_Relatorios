@@ -1,7 +1,8 @@
-from pymongo.errors import CollectionInvalid, PyMongoError
+from bson.objectid import ObjectId
+from pymongo.errors import CollectionInvalid, PyMongoError, InvalidId
+
 from additionals.functions import convert_object_id_to_string
 from database.db import get_db
-from bson.objectid import ObjectId
 
 
 def insert_book_db(dict_values: dict):
@@ -10,7 +11,7 @@ def insert_book_db(dict_values: dict):
         db.book.insert_one(dict_values)
         return "Registrado com sucesso!"
     else:
-        raise Exception("Registros inválidos.")
+        raise Exception("Erro ao cadastrar livro.", "Verifique os valores informados")
 
 
 def read_all_books_db() -> list:
@@ -39,14 +40,18 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
 
 
-def search_books_for_id(books: list) -> list:
+def search_books_by_id(*args) -> list:
 
     db = get_db()
     book = db.book
-    conditionals = []
-    for b in books:
-        conditionals.append({"_id": ObjectId(b["_id"])})
-    query_result = book.find({"$or": conditionals})
+
+    object_id_list = []
+    try:
+        object_id_list = [{"_id": ObjectId(str(book_id))} for book_id in args]
+    except InvalidId as err:
+        raise Exception(f"Erro: {err}")
+
+    query_result = book.find({"$or": object_id_list})
     book_list = convert_object_id_to_string(query_result)
 
     if book_list:
@@ -77,17 +82,4 @@ def update_all_publishers_book_db(publishers_field: str, new_value: str):
     if affected_rows:
         return "Registros alterados com sucesso!"
     else:
-        raise Exception("Nenhuma editora encontrada!")        
-
-
-def search_book_for_id(id_book: str) -> dict:
-
-    db = get_db()
-    book = db.book
-    book_saved = book.find_one({"_id": ObjectId(id_book)})
-    book_saved["_id"] = str(book_saved["_id"])
-
-    if book_saved:
-        return book_saved
-    else:
-        raise Exception("Nenhum livro encontrado!")
+        raise Exception("Nenhuma editora encontrada!")
