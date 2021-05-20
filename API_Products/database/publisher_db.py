@@ -35,7 +35,6 @@ def update_publisher_db(dict_values: dict) -> str:
         db = get_db()
         id_publisher = ObjectId(dict_values["_id"])
         del dict_values["_id"]
-        print(dict_values)
         db.publisher.update_one({"_id": id_publisher}, {"$set": dict_values})
         return "Editora alterada com sucesso!"
     except Exception:

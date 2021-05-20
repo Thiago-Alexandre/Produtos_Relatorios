@@ -16,7 +16,7 @@ def insert_publisher(dict_values: dict) -> dict:
     """
     received = set(dict_values.keys())
     expected = {"name", "country"}
-    if expected.symmetric_difference(received) or not dict_values["name"] or not dict_values["country"]:
+    if expected != received or not dict_values["name"] or not dict_values["country"]:
         return dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
 
     try:
@@ -62,7 +62,7 @@ def update_publisher(dict_values) -> dict:
     """
     received = set(dict_values.keys())
     expected = {"_id", "name", "country"}
-    if expected.symmetric_difference(received) or not dict_values["_id"] or \
+    if expected != received or not dict_values["_id"] or \
             not dict_values["name"] or not dict_values["country"]:
         return dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
 
@@ -100,7 +100,3 @@ def delete_publisher(dict_values: dict) -> dict:
         return dict(status=200, result_data=publishers)
     except Exception as error:
         return dict(status=400, error=error.args[0], message="Verifique os dados informados.")
-
-
-# publisher_data = dict(_id="Teste", name="Teste", country="Teste")
-# print(update_publisher(publisher_data))
