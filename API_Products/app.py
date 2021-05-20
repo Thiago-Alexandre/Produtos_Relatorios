@@ -201,4 +201,61 @@ def read_format_books():
     return response, response["status"]
 
 
+@app.route("/books/stock/verify", methods=["GET"])
+def verify_stock():
+    header = dict(request.headers)
+    body_request = request.get_json()
+
+    default_message = "Verifique se todos os dados foram informados."
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message=default_message)
+
+    try:
+        response = book_controller.verify_stock(body_request)
+    except Exception:
+        response = dict(status=400, error="Erro ao verificar estoque.", message=default_message)
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print(err.args[0])
+
+    return response, response["status"]
+
+
+@app.route("/books/purchase/finish", methods=["POST"])
+def finish_purchase():
+    header = dict(request.headers)
+    body_request = request.get_json()
+
+    default_error = "Dados invalidos."
+    default_message="Verifique os dados informados."
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message=default_message)
+
+    # Validates body request:
+    expected = {"shopping_car", "purchased"}
+    received = set(body_request.keys())
+    if expected != received:
+        response = dict(status=400, error=default_error, message=default_message)
+    elif not isinstance(body_request["purchased"], bool):
+        response = dict(status=400, error=default_error, message=default_message)
+
+    try:
+        response = book_controller.finish_purchase(body_request["shopping_car"], body_request["purchased"])
+    except Exception:
+        response = dict(status=400, error="Erro finalizar a compra.", message=default_message)
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print(err.args[0])
+
+    return response, response["status"]
+
+
 app.run(debug=True)
