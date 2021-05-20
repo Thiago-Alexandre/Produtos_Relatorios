@@ -1,11 +1,9 @@
 from flask import Flask, request
 
-
-from controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
-    language_book_controller, format_controller
-
 from book_logs.book_logs import generate_log_data
 from book_logs.logging_db import *
+from controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
+    language_book_controller, format_controller
 from database.auth import KEYS
 
 app = Flask(__name__)
