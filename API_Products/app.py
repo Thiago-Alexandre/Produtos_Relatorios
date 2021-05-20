@@ -230,8 +230,8 @@ def finish_purchase():
     header = dict(request.headers)
     body_request = request.get_json()
 
-    default_error = "Dados invalidos."
-    default_message="Verifique os dados informados."
+    default_error = "Dados inválidos."
+    default_message = "Verifique os dados informados."
 
     if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
         response = dict(status=400, error="Chave de acesso inválida.", message=default_message)
@@ -247,7 +247,7 @@ def finish_purchase():
     try:
         response = book_controller.finish_purchase(body_request["shopping_car"], body_request["purchased"])
     except Exception:
-        response = dict(status=400, error="Erro finalizar a compra.", message=default_message)
+        response = dict(status=400, error="Erro ao finalizar a compra.", message=default_message)
 
     try:
         log_data = generate_log_data(request, response)
