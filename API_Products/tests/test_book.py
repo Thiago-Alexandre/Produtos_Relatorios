@@ -49,15 +49,15 @@ class TestBook(TestCase):
     def test_finish_purshase_works(self, mock_book_db):
         mock_book_db.search_books_by_id.return_value = [{"item_price":1, "item_quantity":10, "page_quantity":1, "format": ""}]
 
-        result = finish_purshase([], True)
+        result = finish_purchase([], True)
         self.assertEqual(result, {'status': 400, 'text': 'Erro: reserve_quantity'})
 
         mock_book_db.search_books_by_id.return_value = [{"item_price": 1, "item_quantity": 1, "quantity_purchased": 1, "reserve_quantity":1, "item_quantity":1}]
-        result = finish_purshase([{"item_quantity":1, "reserve_quantity":1, "quantity_purchased":1}], True)
+        result = finish_purchase([{"item_quantity":1, "reserve_quantity":1, "quantity_purchased":1}], True)
         self.assertEqual(result, {'status': 200, 'text': 'Estoque alterado com sucesso!'})
 
         mock_book_db.search_books_by_id.return_value = [{"item_price": 1, "item_quantity": 1, "quantity_purchased": 1, "reserve_quantity":1, "item_quantity":1}]
-        result = finish_purshase([{"item_quantity":1, "reserve_quantity":1, "quantity_purchased":1}], False)
+        result = finish_purchase([{"item_quantity":1, "reserve_quantity":1, "quantity_purchased":1}], False)
         self.assertEqual(result, {'status': 200, 'text': 'Estoque alterado com sucesso!'})
 
     @mock.patch("controllers.book_controller.book_db")
