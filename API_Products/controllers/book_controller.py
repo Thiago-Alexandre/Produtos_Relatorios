@@ -228,7 +228,7 @@ def verify_stock(list_shopping_cart_values):
 
     for i in range(len(list_shopping_cart_values)):
         if list_shopping_cart_values[i]["quantity_purchased"] <= list_books_values[i]["item_quantity"]:
-            total_price_items += list_books_values[i]["item_price"]
+            total_price_items += list_books_values[i]["item_price"]*list_shopping_cart_values[i]["quantity_purchased"]
 
             format_name = list_books_values[i]["format"]
 
