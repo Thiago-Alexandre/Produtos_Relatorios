@@ -83,3 +83,16 @@ def update_all_publishers_book_db(old_publisher: dict, new_publisher: dict) -> s
         return "Registros alterados com sucesso!"
     except Exception:
         raise Exception("Erro ao atualizar os dados dos livros!")
+
+
+def update_all_authors_book_db(old_author: dict, new_author: dict) -> str:
+    try:
+        db = get_db()
+        db.book.update_many({'author.name': old_author["name"], 'author.lastname': old_author["lastname"],
+                             'author.country': old_author["country"]},
+                            {'$set': {"author.name": new_author["name"], "author.lastname": new_author["lastname"],
+                                      "author.country": new_author["country"]}})
+        return "Registros alterados com sucesso!"
+    except Exception as error:
+        print(error)
+        raise Exception("Erro ao atualizar os dados dos livros!")

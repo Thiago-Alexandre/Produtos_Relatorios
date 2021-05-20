@@ -55,25 +55,21 @@ def update_publisher(dict_values) -> dict:
     Verifica se o país está cadastrado. Retorna dados de erro caso não esteja;
     Altera os dados da editora nos livros caso ela esteja sendo usada;
     Altera os dados da editora. Retorna mensagem de sucesso.
-    Caso ocorra algum erro ao salvar, retorna dados de erro.
+    Caso ocorra algum erro ao alterar, retorna dados de erro.
 
     :param dict_values: {_id, name, country}
     :return: dict or raise Exception
     """
     received = set(dict_values.keys())
     expected = {"_id", "name", "country"}
-    if expected != received or not dict_values["_id"] or \
-            not dict_values["name"] or not dict_values["country"]:
+    if expected != received or not dict_values["_id"] or not dict_values["name"] or not dict_values["country"]:
         return dict(status=400, error="Valores inseridos inválidos.", message="Verifique os dados informados.")
 
     try:
-        print(publisher_db.validate_publisher(dict_values))
-        if publisher_db.validate_publisher(dict_values):
+        if publisher_db.validate_publisher(dict(name=dict_values["name"], country=dict_values["country"])):
             return dict(status=400, error="Editora já salva!", message="Verifique os dados informados.")
-        print(country_db.search_country(dict_values['country']))
         if not country_db.search_country(dict_values['country']):
             return dict(status=400, error="País não foi encontrado!", message="Verifique os dados informados.")
-        print("passou")
         old_publisher = publisher_db.search_publisher(dict_values["_id"])
         publishers = publisher_db.update_publisher_db(dict_values)
         book_db.update_all_publishers_book_db(old_publisher, dict_values)
