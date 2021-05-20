@@ -228,12 +228,10 @@ def verify_stock(list_shopping_cart_values):
 
     for i in range(len(list_shopping_cart_values)):
         if list_shopping_cart_values[i]["quantity_purchased"] <= list_books_values[i]["item_quantity"]:
-            total_price_items += list_books_values[i]["item_price"]*list_shopping_cart_values[i]["quantity_purchased"]
+            total_price_items += list_books_values[i]["item_price"] * list_shopping_cart_values[i]["quantity_purchased"]
 
-            format_name = list_books_values[i]["format"]
-
-            is_digital = list(filter(lambda x: x["name"] == format_name, get_book_format_list_db()))[0]
-            if not is_digital["digital"]:
+            is_digital = list_books_values[i]["format"]["digital"]
+            if not is_digital:
                 digital_value = False
         else:
             list_shopping_cart_values[i]["quantity_purchased"] = list_books_values[i]["item_quantity"]
