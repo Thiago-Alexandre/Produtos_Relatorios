@@ -97,11 +97,10 @@ def update_all_publishers_book_db(old_publisher: dict, new_publisher: dict) -> s
 
 def update_all_authors_book_db(old_author: dict, new_author: dict) -> str:
     try:
+        del old_author["_id"]
         db = get_db()
-        db.book.update_many({'author.name': old_author["name"], 'author.lastname': old_author["lastname"],
-                             'author.country': old_author["country"]},
-                            {'$set': {"author.name": new_author["name"], "author.lastname": new_author["lastname"],
-                                      "author.country": new_author["country"]}})
+        db.book.update_many({}, {"$set": {"author.$[element]": new_author}},
+                            array_filters=[{"element": old_author}])
         return "Registros alterados com sucesso!"
     except Exception as error:
         print(error)
