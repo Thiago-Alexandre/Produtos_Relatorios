@@ -92,7 +92,7 @@ def read_author():
     if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
-        response = author_controller.author_read_all_validation()
+        response = author_controller.read_all_authors()
 
     return response, response["status"]
 
@@ -105,7 +105,7 @@ def insert_authors():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         dict_values = request.get_json()
-        response = author_controller.author_insert_validation(dict_values)
+        response = author_controller.insert_author(dict_values)
 
     return response, response["status"]
 
@@ -126,7 +126,7 @@ def insert_books():
     except Exception as err:
         print(err.args[0])
 
-    return response, response["status"]
+    return response, response.get("status")
 
 
 @app.route("/books", methods=["GET"])
