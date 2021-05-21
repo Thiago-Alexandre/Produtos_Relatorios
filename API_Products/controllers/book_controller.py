@@ -5,13 +5,17 @@ from database import book_db
 def insert_book(dict_values: dict) -> dict:
     try:
         validate_book(dict_values)
-        dict_values["reserve_quantity"] = 0
-
-        book_db.insert_book_db(dict_values)
-
-        return dict(status=200, message="Livro cadastrado com sucesso!")
     except Exception as error:
         return dict(status=400, error=error.args[0], message=error.args[1])
+
+    try:
+        dict_values["reserve_quantity"] = 0
+
+        inserted_book = book_db.insert_book_db(dict_values)
+
+        return dict(status=200, message="Livro cadastrado com sucesso!", book=inserted_book)
+    except Exception as error:
+        return dict(status=500, error=error.args[0], message=error.args[1])
 
 
 def get_book_list() -> dict:
@@ -21,9 +25,9 @@ def get_book_list() -> dict:
         if result_data:
             return dict(status=200, result_data=result_data)
         else:
-            raise Exception("Não foi possível acessar a base de dados!")
+            return dict(status=200, message="Nenhum livro cadastrado.", result_data=[])
     except Exception as error:
-        return dict(status=500, error=error.args[0], message="Tente novamente mais tarde."), ""
+        return dict(status=500, error=error.args[0], message="Tente novamente mais tarde.")
 
 
 def verify_stock(list_shopping_cart_values):
