@@ -162,7 +162,7 @@ def validate_book(body_request: dict, is_update=False):
         raise Exception(error_message, default_message)
 
     fisical_book_formats = get_book_format_list_db()
-    if body_request["format"] not in list(x["name"] for x in fisical_book_formats if not x["digital"]):
+    if body_request["format"] in fisical_book_formats:
         default_message = "Verifique o formato do livro especificado."
         raise Exception(error_message, default_message)
 
