@@ -3,7 +3,7 @@ from pymongo import ReturnDocument
 from pymongo.errors import CollectionInvalid, PyMongoError, InvalidId
 
 from additionals.functions import convert_object_id_to_string
-from database.db import get_db
+from database.db import get_db, get_conn
 
 
 def insert_book_db(dict_values: dict) -> dict or None:
@@ -19,21 +19,44 @@ def insert_book_db(dict_values: dict) -> dict or None:
         raise Exception(f"Other error: {err.args[0]}", "Erro ao salvar livro no banco de dados.")
 
 
-def update_book_db(dict_values) -> dict or None:
+def update_book_db(book_list: list or dict) -> list or None:
+    """
+    This function get a book list, update your elements and returns other list of books before updating, or None if all
+    elements are not updated.
+    :param book_list:   a list of books.
+    :return:            a list of books before updating, or None if all elements are not updated.
+    """
+
+    client = get_conn()
     db = get_db()
 
-    _id = dict_values["_id"]
-    del dict_values["_id"]
+    book_list_with_updated_values = []
+    if not isinstance(book_list, list):
+        book_list = [book_list]
 
     try:
-        before_document = db.book.find_one_and_update(
-            filter={"_id": ObjectId(_id)},
-            update={"$set": dict_values},
-            upsert=False,
-            return_document=ReturnDocument.BEFORE,
-            projection={key: 1 for key in list(dict_values.keys())}
-        )
-        return before_document
+        with client.start_session() as session:
+            with session.start_transaction():
+                for book in book_list:
+
+                    _id = book["_id"]
+                    del book["_id"]
+
+                    before_document = db.book.find_one_and_update(
+                        filter={"_id": ObjectId(_id)},
+                        update={"$set": book},
+                        upsert=False,
+                        return_document=ReturnDocument.BEFORE,
+                        projection={key: 1 for key in list(book.keys())}
+                    )
+                    if before_document:
+                        book_list_with_updated_values.append(before_document)
+                    else:
+                        session.abort_transaction()
+                        break
+
+        if len(book_list_with_updated_values) == len(book_list):
+            return book_list_with_updated_values
     except PyMongoError as err:
         raise Exception(f"PyMongo Error: {err.args[0]}")
     except Exception as err:
@@ -65,17 +88,23 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
 
 
-def search_books_by_id(*args) -> list:
+def get_books_by_id(*args, **kwargs) -> list:
+    """
+    This function get strings of ObjectId and get the books data in data base to return.
+    :param args:    strings of ObjectId.
+    :param kwargs:  fields to return. Example: _id=1, title=1, description=1
+    :return:        a dictionary list with saved book data.
+    """
+
     db = get_db()
     book = db.book
 
-    object_id_list = []
     try:
         object_id_list = [{"_id": ObjectId(str(book_id))} for book_id in args]
     except InvalidId as err:
         raise Exception(f"Erro: {err}")
 
-    query_result = book.find({"$or": object_id_list})
+    query_result = book.find({"$or": object_id_list}, kwargs) if kwargs else book.find({"$or": object_id_list})
     book_list = convert_object_id_to_string(query_result)
 
     if book_list:

@@ -2,8 +2,8 @@ from flask import Flask, request
 
 from book_logs.book_logs import generate_log_data
 from book_logs.logging_db import *
-from controllers import category, publisher_controller, author_controller, book_controller, country_controller, \
-    language_book_controller, format_controller
+from controllers import category_controller, publisher_controller, author_controller, book_controller, \
+    country_controller, language_book_controller, format_controller
 from database.auth import KEYS
 
 app = Flask(__name__)
@@ -16,7 +16,7 @@ def read_categories():
     if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
-        response = category.read_all_categories()
+        response = category_controller.read_all_categories()
 
     return response, response["status"]
 
@@ -29,7 +29,7 @@ def insert_categories():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         dict_values = request.get_json()
-        response = category.insert_categories(dict_values)
+        response = category_controller.insert_categories(dict_values)
 
     return response, response["status"]
 
@@ -42,7 +42,7 @@ def update_categories():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         dict_values = request.get_json()
-        response = category.update_categories(dict_values)
+        response = category_controller.update_categories(dict_values)
 
     return response, response["status"]
 
@@ -55,7 +55,7 @@ def delete_categories():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         dict_values = request.get_json()
-        response = category.delete_categories(dict_values)
+        response = category_controller.delete_categories(dict_values)
 
     return response, response["status"]
 
@@ -181,6 +181,25 @@ def insert_books():
     return response, response.get("status")
 
 
+@app.route("/books/update", methods=["PUT"])
+def update_book():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        body_request = request.get_json()
+        response = book_controller.update_book(body_request)
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print(err.args[0])
+
+    return response, response.get("status")
+
+
 @app.route("/books", methods=["GET"])
 def read_books():
     header = dict(request.headers)
@@ -243,12 +262,9 @@ def verify_stock():
     default_message = "Verifique se todos os dados foram informados."
 
     if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
-        response = dict(status=400, error="Chave de acesso inválida.", message=default_message)
+        return dict(status=400, error="Chave de acesso inválida.", message=default_message)
 
-    try:
-        response = book_controller.verify_stock(body_request)
-    except Exception:
-        response = dict(status=400, error="Erro ao verificar estoque.", message=default_message)
+    response = book_controller.check_stock(body_request)
 
     try:
         log_data = generate_log_data(request, response)
@@ -256,6 +272,8 @@ def verify_stock():
     except Exception as err:
         print(err.args[0])
 
+    if "books" in list(response.keys()):
+        response.pop("books")
     return response, response["status"]
 
 
@@ -268,20 +286,17 @@ def finish_purchase():
     default_message = "Verifique os dados informados."
 
     if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
-        response = dict(status=400, error="Chave de acesso inválida.", message=default_message)
+        return dict(status=400, error="Chave de acesso inválida.", message=default_message)
 
     # Validates body request:
     expected = {"shopping_car", "purchased"}
     received = set(body_request.keys())
     if expected != received:
-        response = dict(status=400, error=default_error, message=default_message)
+        return dict(status=400, error=default_error, message=default_message)
     elif not isinstance(body_request["purchased"], bool):
-        response = dict(status=400, error=default_error, message=default_message)
+        return dict(status=400, error=default_error, message=default_message)
 
-    try:
-        response = book_controller.finish_purchase(body_request["shopping_car"], body_request["purchased"])
-    except Exception:
-        response = dict(status=400, error="Erro ao finalizar a compra.", message=default_message)
+    response = book_controller.finish_purchase(body_request["shopping_car"], body_request["purchased"])
 
     try:
         log_data = generate_log_data(request, response)
@@ -289,6 +304,8 @@ def finish_purchase():
     except Exception as err:
         print(err.args[0])
 
+    if "books" in list(response.keys()):
+        response.pop("books")
     return response, response["status"]
 
 

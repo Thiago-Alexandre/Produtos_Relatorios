@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from database import book_db
+from database.book_db import isbn_exists_db, get_books_by_id
 from database.author_db import read_all_authors_db
 from database.category_db import read_all_categories_db
 from database.format_db import get_book_format_list_db
@@ -8,9 +8,10 @@ from database.language_book_db import get_language_book_list_db
 from database.publisher_db import read_all_publishers_db
 
 
-def validate_book(body_request: dict):
+def validate_book(body_request: dict, is_update=False):
     # Expected body request:
     expected = {
+        "_id",
         "title",
         "description",
         "language_book",
@@ -33,6 +34,9 @@ def validate_book(body_request: dict):
     expected_publisher = {"name", "country"}
     expected_size = {"height", "lenght", "width"}
     received = set(body_request.keys())
+
+    if not is_update:
+        expected.discard("_id")
 
     # BODY REQUEST VALIDATION:
     error_message = "Invalid body request."
@@ -60,7 +64,7 @@ def validate_book(body_request: dict):
 
     # Validates the publisher information:
     if not isinstance(body_request["publisher"], dict):
-        default_message = "Dados da editora devem ser um dicioáario."
+        default_message = "Dados da editora devem ser um dicionário."
         raise Exception(error_message, default_message)
 
     elif expected_publisher != set(body_request["publisher"].keys()):
@@ -128,7 +132,7 @@ def validate_book(body_request: dict):
         raise Exception(error_message, default_message)
 
     if not isinstance(body_request["item_quantity"], int) or body_request["item_quantity"] < 0:
-        default_message = "A quantidade do produto deve ser maior que 0."
+        default_message = "A quantidade do produto deve ser maior que zero."
         raise Exception(error_message, default_message)
 
     try:
@@ -158,7 +162,7 @@ def validate_book(body_request: dict):
         raise Exception(error_message, default_message)
 
     fisical_book_formats = get_book_format_list_db()
-    if body_request["format"] not in list(x["name"] for x in fisical_book_formats if not x["digital"]):
+    if body_request["format"] not in fisical_book_formats:
         default_message = "Verifique o formato do livro especificado."
         raise Exception(error_message, default_message)
 
@@ -167,28 +171,33 @@ def validate_book(body_request: dict):
         default_message = "Verifique os dados da categoria informados."
         raise Exception(error_message, default_message)
 
-    if isinstance(body_request["isbn-10"], str):
-        isbn_10 = "".join([x for x in body_request['isbn-10'] if x.isdigit()])
-        if len(isbn_10) != 10:
+    if not is_update:
+        if isinstance(body_request["isbn-10"], str):
+            isbn_10 = "".join([x for x in body_request['isbn-10'] if x.isdigit()])
+            if len(isbn_10) != 10:
+                default_message = "Verifique o ISBN-10 informado."
+                raise Exception(error_message, default_message)
+            elif isbn_exists_db(isbn_10):
+                error_message = "Cadastro não efetuado."
+                default_message = "Já existe um livro com este ISBN-10 cadastrado."
+                raise Exception(error_message, default_message)
+        else:
             default_message = "Verifique o ISBN-10 informado."
             raise Exception(error_message, default_message)
-        elif book_db.isbn_exists_db(isbn_10):
-            error_message = "Cadastro não efetuado."
-            default_message = "Já existe um livro com este ISBN-10 cadastrado."
-            raise Exception(error_message, default_message)
-    else:
-        default_message = "Verifique o ISBN-10 informado."
-        raise Exception(error_message, default_message)
 
-    if isinstance(body_request["isbn-13"], str):
-        isbn_13 = "".join([x for x in body_request['isbn-13'] if x.isdigit()])
-        if len(isbn_13) != 13:
-            default_message = "Verifique o ISBN-13 informado."
-            raise Exception(error_message, default_message)
-        elif book_db.isbn_exists_db(isbn_13):
-            error_message = "Cadastro não efetuado."
-            default_message = "Já existe um livro com este ISBN-13 cadastrado."
+        if isinstance(body_request["isbn-13"], str):
+            isbn_13 = "".join([x for x in body_request['isbn-13'] if x.isdigit()])
+            if len(isbn_13) != 13:
+                default_message = "Verifique o ISBN-13 informado."
+                raise Exception(error_message, default_message)
+            elif isbn_exists_db(isbn_13):
+                error_message = "Cadastro não efetuado."
+                default_message = "Já existe um livro com este ISBN-13 cadastrado."
+                raise Exception(error_message, default_message)
+        else:
+            default_message = "Verifique o ISBN-10 informado."
             raise Exception(error_message, default_message)
     else:
-        default_message = "Verifique o ISBN-10 informado."
-        raise Exception(error_message, default_message)
+        isbns = get_books_by_id(body_request["_id"], **{"isbn-10": 1, "isbn-13": 1})[0]
+        if isbns["isbn-10"] != body_request["isbn-10"] or isbns["isbn-13"] != body_request["isbn-13"]:
+            raise Exception("Não é possível mudar o ISBN.", "Verififque os ISBN's informados.")
