@@ -70,7 +70,7 @@ def check_stock(shopping_cart: list) -> dict:
     :return:                a dict with response of request.
     """
 
-    list_ids = list(map(lambda x: x['_id'], shopping_cart))
+    list_ids = list(map(lambda x: x["item_id"], shopping_cart))
     try:
         book_list_db = get_books_by_id(*list_ids)
     except Exception as err:
@@ -104,9 +104,11 @@ def check_stock(shopping_cart: list) -> dict:
         return dict(status=400, books_lacking=no_stock_items, stocks=False)
     else:
         try:
-            books_updated_sucessfully = update_book_db(book_list_db)
+            print(book_list_db)
+            books_updated_successfully = update_book_db(book_list_db)
+            print(books_updated_successfully)
             return dict(status=200, books_stocks=book_list_db, stocks=True, total_price=total_price_car,
-                        digital=contains_digital_books, books=books_updated_sucessfully)
+                        digital=contains_digital_books, books=books_updated_successfully)
         except Exception as err:
             return dict(status=500, error=err.args[0], message="Não foi possível reservar produtos do estoque.")
 
@@ -120,7 +122,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
     :return:                a dict with response of request.
     """
 
-    list_ids = list(map(lambda x: x['_id'], shopping_cart))
+    list_ids = list(map(lambda x: x["item_id"], shopping_cart))
     try:
         book_list_db = get_books_by_id(*list_ids)
     except Exception as err:
@@ -133,7 +135,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
         for book_db, book_cart in zip(book_list_db, shopping_cart):
             if book_db["reserve_quantity"] >= book_cart["quantity_purchased"]:
                 updated_book_list.append({
-                    "_id": book_db.get("_id"),
+                    "item_id": book_db.get("_id"),
                     "item_quantity": book_db["item_quantity"],
                     "reserve_quantity": book_db["reserve_quantity"] - book_cart["quantity_purchased"]
                 })
@@ -150,7 +152,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
 
             if 0 < book_cart["quantity_purchased"] <= book_db["reserve_quantity"]:
                 updated_book_list.append({
-                    "_id": book_db.get("_id"),
+                    "item_id": book_db.get("item_id"),
                     "item_quantity": book_db["item_quantity"] + book_cart["quantity_purchased"],
                     "reserve_quantity": book_db["reserve_quantity"] - book_cart["quantity_purchased"]
                 })
@@ -173,3 +175,6 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
             )
     except Exception as err:
         return dict(status=500, error=err, message="Compra não finalizada.")
+
+#
+# print(check_stock([dict(item_id="60abe5359689c71ef3179535", quantity_purchased=10)]))
