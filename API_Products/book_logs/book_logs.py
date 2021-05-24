@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Request
 
 from database.auth import KEYS
+from database.book_db import get_books_by_id
 
 
 def generate_log_data(request: Request, response_data: dict) -> dict:
@@ -25,11 +26,20 @@ def generate_log_data(request: Request, response_data: dict) -> dict:
         body_request=body_request
     )
 
-    log_data.pop("body_request")
+    if status == 200:
+        log_data.pop("body_request")
 
     book_is_present = "book" in list(response_data.keys())
 
-    if request.method == "POST":
+    if request.path == "/books/purchase/finish" or request.path == "/books/stock/verify":
+        if "books" in list(response_data.keys()):
+            log_data["before"] = response_data["books"]
+            log_data["after"] = get_books_by_id(
+                *[bk["_id"] for bk in response_data["books"]],
+                _id=1, item_quantity=1, reserve_quantity=1,
+            )
+
+    elif request.method == "POST":
         if book_is_present:
             log_data["inserted"] = response_data["book"]
 
