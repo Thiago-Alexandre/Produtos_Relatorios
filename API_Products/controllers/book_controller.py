@@ -147,7 +147,8 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
         response_message = "Compra não finalizada! Produtos devolvidos ao estoque."
 
         for book_db, book_cart in zip(book_list_db, shopping_cart):
-            if 0 < book_db["reserve_quantity"] <= book_cart["quantity_purchased"]:
+
+            if 0 < book_cart["quantity_purchased"] <= book_db["reserve_quantity"]:
                 updated_book_list.append({
                     "_id": book_db.get("_id"),
                     "item_quantity": book_db["item_quantity"] + book_cart["quantity_purchased"],
