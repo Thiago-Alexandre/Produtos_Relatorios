@@ -114,7 +114,14 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
         raise Exception(f"Other PyMongo error: {error.args[0]}")
 
 
-def search_books_by_id(*args) -> list:
+def get_books_by_id(*args, **kwargs) -> list:
+    """
+    This function get strings of ObjectId and get the books data in data base to return.
+    :param args:    strings of ObjectId.
+    :param kwargs:  fields to return. Example: _id=1, title=1, description=1
+    :return:        a dictionary list with saved book data.
+    """
+
     db = get_db()
     book = db.book
 
@@ -123,7 +130,7 @@ def search_books_by_id(*args) -> list:
     except InvalidId as err:
         raise Exception(f"Erro: {err}")
 
-    query_result = book.find({"$or": object_id_list})
+    query_result = book.find({"$or": object_id_list}, kwargs) if kwargs else book.find({"$or": object_id_list})
     book_list = convert_object_id_to_string(query_result)
 
     if book_list:
@@ -153,4 +160,3 @@ def update_all_authors_book_db(old_author: dict, new_author: dict) -> str:
     except Exception as error:
         print(error)
         raise Exception("Erro ao atualizar os dados dos livros!")
-
