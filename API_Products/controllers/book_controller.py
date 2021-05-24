@@ -1,5 +1,5 @@
 from controllers.utils import validate_book
-from database.book_db import get_books_by_id, insert_book_db, read_all_books_db, update_book_list_db
+from database.book_db import get_books_by_id, insert_book_db, read_all_books_db, update_book_db
 
 
 def insert_book(dict_values: dict) -> dict:
@@ -15,10 +15,33 @@ def insert_book(dict_values: dict) -> dict:
 
     try:
         dict_values["reserve_quantity"] = 0
+        dict_values["rating"] = 0
 
         inserted_book = insert_book_db(dict_values)
+        inserted_book["_id"] = str(inserted_book["_id"])
 
         return dict(status=200, message="Livro cadastrado com sucesso!", book=inserted_book)
+    except Exception as error:
+        return dict(status=500, error=error.args[0], message=error.args[1])
+
+
+def update_book(dict_values: dict) -> dict:
+    """
+    Gets a dictionary with book data and update this data in db.
+    :param dict_values: a dict with book data.
+    :return:            a dict with response of request including book before update.
+    """
+    try:
+
+        validate_book(dict_values, is_update=True)
+    except Exception as error:
+        return dict(status=400, error=error.args[0], message=error.args[1])
+
+    try:
+        updated_book = update_book_db(dict_values)[0]
+        updated_book["_id"] = str(updated_book["_id"])
+
+        return dict(status=200, message="Livro atualizado com sucesso!", book=updated_book)
     except Exception as error:
         return dict(status=500, error=error.args[0], message=error.args[1])
 
@@ -83,7 +106,7 @@ def check_stock(shopping_cart: list) -> dict:
         return dict(status=400, books_lacking=no_stock_items, stocks=False)
     else:
         try:
-            books_updated_sucessfully = update_book_list_db(book_list_db)
+            books_updated_sucessfully = update_book_db(book_list_db)
             return dict(status=200, books_stocks=book_list_db, stocks=True, total_price=total_price_car,
                         digital=contains_digital_books, books=books_updated_sucessfully)
         except Exception as err:
@@ -140,7 +163,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
                 )
 
     try:
-        books_updated_sucessfully = update_book_list_db(updated_book_list)
+        books_updated_sucessfully = update_book_db(updated_book_list)
         if books_updated_sucessfully:
             return dict(status=200, message=response_message, books=books_updated_sucessfully)
         else:
