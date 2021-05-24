@@ -76,16 +76,18 @@ def check_stock(shopping_cart: list) -> dict:
             book_cart["quantity_purchased"] = item_quantity
             no_stock_items.append(book_cart)
 
+        book_db.pop("format")
+        book_db.pop("item_price")
+
     if no_stock_items:
         return dict(status=400, books_lacking=no_stock_items, stocks=False)
     else:
         try:
-            update_book_list_db(book_list_db)
+            books_updated_sucessfully = update_book_list_db(book_list_db)
+            return dict(status=200, books_stocks=book_list_db, stocks=True, total_price=total_price_car,
+                        digital=contains_digital_books, books=books_updated_sucessfully)
         except Exception as err:
             return dict(status=500, error=err.args[0], message="Não foi possível reservar produtos do estoque.")
-
-        return dict(status=200, books_stocks=book_list_db, stocks=True, total_price=total_price_car,
-                    digital=contains_digital_books)
 
 
 def finish_purchase(shopping_cart: list, success: bool) -> dict:
@@ -101,7 +103,6 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
     try:
         book_list_db = get_books_by_id(*list_ids)
     except Exception as err:
-        print(f"Deu erro: {err}")
         return dict(status=400, error=err.args[0], message="Verifique os dados informados.")
 
     updated_book_list = []
@@ -112,6 +113,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
             if book_db["reserve_quantity"] >= book_cart["quantity_purchased"]:
                 updated_book_list.append({
                     "_id": book_db.get("_id"),
+                    "item_quantity": book_db["item_quantity"],
                     "reserve_quantity": book_db["reserve_quantity"] - book_cart["quantity_purchased"]
                 })
             else:
@@ -140,7 +142,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
     try:
         books_updated_sucessfully = update_book_list_db(updated_book_list)
         if books_updated_sucessfully:
-            return dict(status=200, message=response_message)
+            return dict(status=200, message=response_message, books=books_updated_sucessfully)
         else:
             return dict(
                 status=500,
