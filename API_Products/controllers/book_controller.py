@@ -99,8 +99,7 @@ def check_stock(shopping_cart: list) -> dict:
             book_cart["quantity_purchased"] = item_quantity
             no_stock_items.append(book_cart)
 
-        book_db.pop("format")
-        book_db.pop("item_price")
+        book_db.pop("item_cost_price")
 
     if no_stock_items:
         return dict(status=400, books_lacking=no_stock_items, stocks=False)
