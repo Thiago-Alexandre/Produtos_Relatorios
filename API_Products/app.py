@@ -158,7 +158,7 @@ def delete_authors():
     else:
         dict_values = request.get_json()
         response = author_controller.delete_author(dict_values)
-
+        
     return response, response["status"]
 
 
@@ -178,7 +178,7 @@ def insert_books():
     except Exception as err:
         print(err.args[0])
 
-    return response, response["status"]
+    return response, response.get("status")
 
 
 @app.route("/books", methods=["GET"])
@@ -208,12 +208,6 @@ def read_countries():
     else:
         response = country_controller.get_country_name_list()
 
-    try:
-        log_data = generate_log_data(request, response)
-        insert_log_db(log_data)
-    except Exception as err:
-        print("Logging error: " + err.args[0])
-
     return response, response["status"]
 
 
@@ -226,12 +220,6 @@ def read_language_books():
     else:
         response = language_book_controller.get_language_book_list()
 
-    try:
-        log_data = generate_log_data(request, response)
-        insert_log_db(log_data)
-    except Exception as err:
-        print("Logging error: " + err.args[0])
-
     return response, response["status"]
 
 
@@ -243,12 +231,6 @@ def read_format_books():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         response = format_controller.get_format_list()
-
-    try:
-        log_data = generate_log_data(request, response)
-        insert_log_db(log_data)
-    except Exception as err:
-        print("Logging error: " + err.args[0])
 
     return response, response["status"]
 

@@ -1,17 +1,43 @@
 from bson.objectid import ObjectId
+from pymongo import ReturnDocument
 from pymongo.errors import CollectionInvalid, PyMongoError, InvalidId
 
 from additionals.functions import convert_object_id_to_string
 from database.db import get_db
 
 
-def insert_book_db(dict_values: dict):
+def insert_book_db(dict_values: dict) -> dict or None:
     db = get_db()
-    if dict_values:
-        db.book.insert_one(dict_values)
-        return "Registrado com sucesso!"
-    else:
-        raise Exception("Erro ao cadastrar livro.", "Verifique os valores informados")
+
+    try:
+        inserted_id = db["book"].insert_one(dict_values).inserted_id
+        if inserted_id:
+            return db.book.find_one({"_id": inserted_id})
+    except PyMongoError as err:
+        raise Exception(f"PyMongo Error: {err.args[0]}", "Erro ao salvar livro no banco de dados.")
+    except Exception as err:
+        raise Exception(f"Other error: {err.args[0]}", "Erro ao salvar livro no banco de dados.")
+
+
+def update_book_db(dict_values) -> dict or None:
+    db = get_db()
+
+    _id = dict_values["_id"]
+    del dict_values["_id"]
+
+    try:
+        before_document = db.book.find_one_and_update(
+            filter={"_id": ObjectId(_id)},
+            update={"$set": dict_values},
+            upsert=False,
+            return_document=ReturnDocument.BEFORE,
+            projection={key: 1 for key in list(dict_values.keys())}
+        )
+        return before_document
+    except PyMongoError as err:
+        raise Exception(f"PyMongo Error: {err.args[0]}")
+    except Exception as err:
+        raise Exception(f"Other error: {err.args[0]}")
 
 
 def read_all_books_db() -> list:
@@ -26,7 +52,6 @@ def read_all_books_db() -> list:
 
 
 def isbn_exists_db(isbn_to_check: str) -> bool:
-
     # Checks if exists a book with provided isbn in db:
     try:
         db = get_db()
@@ -41,7 +66,6 @@ def isbn_exists_db(isbn_to_check: str) -> bool:
 
 
 def search_books_by_id(*args) -> list:
-
     db = get_db()
     book = db.book
 
@@ -56,20 +80,6 @@ def search_books_by_id(*args) -> list:
 
     if book_list:
         return book_list
-    else:
-        raise Exception("Nenhum livro encontrado!")
-
-
-def update_book_db(dict_values):
-    db = get_db()
-
-    id = dict_values["_id"]
-    del dict_values["_id"]
-
-    affected_rows = db.book.update_one({"_id": ObjectId(id)}, {"$set": dict_values}).matched_count
-
-    if affected_rows:
-         return "Registro alterado com sucesso!"
     else:
         raise Exception("Nenhum livro encontrado!")
 

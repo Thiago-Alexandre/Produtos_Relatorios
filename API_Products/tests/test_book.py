@@ -1,7 +1,10 @@
 from builtins import delattr
 
+import controllers.utils
 from controllers.book_controller import *
 from unittest import mock, TestCase
+
+from controllers.utils import validate_book
 
 
 class TestBook(TestCase):
@@ -9,7 +12,7 @@ class TestBook(TestCase):
     @mock.patch("controllers.book_controller")
     @mock.patch("controllers.book_controller.book_db")
     def test_insert_book_works(self, mock_book_db, mock_book):
-        mock_book.validate_book.return_value = None
+        controllers.utils.validate_book.return_value = None
         mock_book_db.insert_book_db.return_value = "Success"
         mock_book_db.isbn_exists_db.return_value = False
 
