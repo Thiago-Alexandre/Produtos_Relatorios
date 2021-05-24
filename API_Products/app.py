@@ -2,8 +2,8 @@ from flask import Flask, request
 
 from book_logs.book_logs import generate_log_data
 from book_logs.logging_db import *
-from controllers import category_controller, publisher_controller, author_controller, book_controller, country_controller, \
-    language_book_controller, format_controller
+from controllers import category_controller, publisher_controller, author_controller, book_controller, \
+    country_controller, language_book_controller, format_controller
 from database.auth import KEYS
 
 app = Flask(__name__)
@@ -119,6 +119,25 @@ def insert_books():
     else:
         body_request = request.get_json()
         response = book_controller.insert_book(body_request)
+
+    try:
+        log_data = generate_log_data(request, response)
+        insert_log_db(log_data)
+    except Exception as err:
+        print(err.args[0])
+
+    return response, response.get("status")
+
+
+@app.route("/books/update", methods=["PUT"])
+def update_book():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        body_request = request.get_json()
+        response = book_controller.update_book(body_request)
 
     try:
         log_data = generate_log_data(request, response)
