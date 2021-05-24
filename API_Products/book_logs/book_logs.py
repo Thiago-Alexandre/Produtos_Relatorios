@@ -46,6 +46,7 @@ def generate_log_data(request: Request, response_data: dict) -> dict:
     elif request.method == "PUT":
         if book_is_present:
             log_data["before"] = response_data["book"]
+            body_request["_id"] = response_data["book"]["_id"]
             log_data["after"] = {key: body_request[key] for key in list(response_data["book"].keys())}
 
     elif request.method == "DELETE":
