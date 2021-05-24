@@ -1,5 +1,5 @@
 from controllers.utils import validate_book
-from database.book_db import search_books_by_id, insert_book_db, read_all_books_db, update_book_list_db
+from database.book_db import get_books_by_id, insert_book_db, read_all_books_db, update_book_list_db
 
 
 def insert_book(dict_values: dict) -> dict:
@@ -49,7 +49,7 @@ def check_stock(shopping_cart: list) -> dict:
 
     list_ids = list(map(lambda x: x['_id'], shopping_cart))
     try:
-        book_list_db = search_books_by_id(*list_ids)
+        book_list_db = get_books_by_id(*list_ids)
     except Exception as err:
         return dict(status=400, error=err.args[0], message="Verifique os dados informados.")
 
@@ -99,7 +99,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
 
     list_ids = list(map(lambda x: x['_id'], shopping_cart))
     try:
-        book_list_db = search_books_by_id(*list_ids)
+        book_list_db = get_books_by_id(*list_ids)
     except Exception as err:
         print(f"Deu erro: {err}")
         return dict(status=400, error=err.args[0], message="Verifique os dados informados.")
