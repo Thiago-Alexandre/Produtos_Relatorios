@@ -85,6 +85,32 @@ def insert_publishers():
     return response, response["status"]
 
 
+@app.route("/publishers/update", methods=["PUT"])
+def update_publishers():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        dict_values = request.get_json()
+        response = publisher_controller.update_publisher(dict_values)
+
+    return response, response["status"]
+
+
+@app.route("/publishers/delete", methods=["DELETE"])
+def delete_publishers():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        dict_values = request.get_json()
+        response = publisher_controller.delete_publisher(dict_values)
+
+    return response, response["status"]
+
+
 @app.route("/authors", methods=["GET"])
 def read_author():
     header = dict(request.headers)
@@ -92,7 +118,7 @@ def read_author():
     if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
-        response = author_controller.author_read_all_validation()
+        response = author_controller.read_all_authors()
 
     return response, response["status"]
 
@@ -105,7 +131,33 @@ def insert_authors():
         response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
     else:
         dict_values = request.get_json()
-        response = author_controller.author_insert_validation(dict_values)
+        response = author_controller.insert_author(dict_values)
+
+    return response, response["status"]
+
+
+@app.route("/authors/update", methods=["PUT"])
+def update_authors():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        dict_values = request.get_json()
+        response = author_controller.update_author(dict_values)
+
+    return response, response["status"]
+
+
+@app.route("/authors/delete", methods=["DELETE"])
+def delete_authors():
+    header = dict(request.headers)
+
+    if "Access-Key" not in list(header.keys()) or header.get("Access-Key") not in list(KEYS.values()):
+        response = dict(status=400, error="Chave de acesso inválida.", message="Verifique os dados informados.")
+    else:
+        dict_values = request.get_json()
+        response = author_controller.delete_author(dict_values)
 
     return response, response["status"]
 
