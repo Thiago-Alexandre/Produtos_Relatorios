@@ -19,35 +19,7 @@ def insert_book_db(dict_values: dict) -> dict or None:
         raise Exception(f"Other error: {err.args[0]}", "Erro ao salvar livro no banco de dados.")
 
 
-def update_book_db(book_values: dict) -> dict or None:
-    """
-    This function get a book in a dictionary, update your values and returns the book before updating, or none if the
-    update fail.
-    :param book_values: the book in a dictionary.
-    :return:            the book before updating, or none if the update fail.
-    """
-
-    db = get_db()
-
-    _id = book_values["_id"]
-    del book_values["_id"]
-
-    try:
-        before_document = db.book.find_one_and_update(
-            filter={"_id": ObjectId(_id)},
-            update={"$set": book_values},
-            upsert=False,
-            return_document=ReturnDocument.BEFORE,
-            projection={key: 1 for key in list(book_values.keys())}
-        )
-        return before_document
-    except PyMongoError as err:
-        raise Exception(f"PyMongo Error: {err.args[0]}")
-    except Exception as err:
-        raise Exception(f"Other error: {err.args[0]}")
-
-
-def update_book_list_db(book_list: list) -> list or None:
+def update_book_db(book_list: list or dict) -> list or None:
     """
     This function get a book list, update your elements and returns other list of books before updating, or None if all
     elements are not updated.
@@ -58,7 +30,9 @@ def update_book_list_db(book_list: list) -> list or None:
     client = get_conn()
     db = get_db()
 
-    book_list_with_updated_velues = []
+    book_list_with_updated_values = []
+    if not isinstance(book_list, list):
+        book_list = [book_list]
 
     try:
         with client.start_session() as session:
@@ -76,13 +50,13 @@ def update_book_list_db(book_list: list) -> list or None:
                         projection={key: 1 for key in list(book.keys())}
                     )
                     if before_document:
-                        book_list_with_updated_velues.append(before_document)
+                        book_list_with_updated_values.append(before_document)
                     else:
                         session.abort_transaction()
                         break
 
-        if len(book_list_with_updated_velues) == len(book_list):
-            return book_list_with_updated_velues
+        if len(book_list_with_updated_values) == len(book_list):
+            return book_list_with_updated_values
     except PyMongoError as err:
         raise Exception(f"PyMongo Error: {err.args[0]}")
     except Exception as err:
