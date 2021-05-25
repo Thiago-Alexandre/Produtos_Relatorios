@@ -8,6 +8,18 @@ from database.language_book_db import get_language_book_list_db
 from database.publisher_db import read_all_publishers_db
 
 
+def checks_dict_keys(expected: set, received: set, error_message: str, default_message: str) -> None:
+    if expected != received:
+        missing_keys = expected - received
+        remaining_keys = received - expected
+
+        if len(missing_keys) > 0:
+            default_message += f"Keys faltantes: {', '.join(missing_keys)}. "
+        if len(remaining_keys) > 0:
+            default_message += f"Keys inválidas: {', '.join(remaining_keys)}."
+        raise Exception(error_message, default_message)
+
+
 def validate_book(body_request: dict, is_update=False):
     # Expected body request:
     expected = {
@@ -40,13 +52,9 @@ def validate_book(body_request: dict, is_update=False):
 
     # BODY REQUEST VALIDATION:
     error_message = "Invalid body request."
-    default_message = "Verifique se todos os dados foram informados. "
+    default_message = "Verifique os dados informados. "
 
-    if expected != received:
-        missing_keys = expected - received
-        default_message += f"Keys faltantes: {', '.join(missing_keys)}."
-
-        raise Exception(error_message, default_message)
+    checks_dict_keys(expected, received, error_message, default_message)
 
     # Validates the author information:
     if not isinstance(body_request["author"], list) or \
@@ -56,22 +64,21 @@ def validate_book(body_request: dict, is_update=False):
         default_message = "Dados do autor devem ser uma lista de dicionários."
         raise Exception(error_message, default_message)
 
-    elif expected_author != set(body_request["author"][0].keys()):
-        missing_keys = expected_author - set(body_request["author"][0].keys())
-        default_message += f"Keys faltantes: {', '.join(missing_keys)}."
-        error_message = "Dados do autor incompletos."
-        raise Exception(error_message, default_message)
+    else:
+        for author in body_request["author"]:
+            received_author = set(author.keys())
+            error_message = "Erro ao validar autor."
+            checks_dict_keys(expected_author, received_author, error_message, default_message)
 
     # Validates the publisher information:
     if not isinstance(body_request["publisher"], dict):
         default_message = "Dados da editora devem ser um dicionário."
         raise Exception(error_message, default_message)
 
-    elif expected_publisher != set(body_request["publisher"].keys()):
-        missing_keys = expected_publisher - set(body_request["publisher"].keys())
-        default_message += f"Keys faltantes: {', '.join(missing_keys)}."
-
-        raise Exception(error_message, default_message)
+    else:
+        received_publisher = set(body_request["publisher"].keys())
+        error_message = "Erro ao validar editora."
+        checks_dict_keys(expected_publisher, received_publisher, error_message, default_message)
 
     # Validate sizes information:
     if type(body_request["size"]) is not dict:
