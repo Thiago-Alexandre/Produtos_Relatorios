@@ -104,9 +104,7 @@ def check_stock(shopping_cart: list) -> dict:
         return dict(status=400, books_lacking=no_stock_items, stocks=False)
     else:
         try:
-            print(book_list_db)
             books_updated_successfully = update_book_db(book_list_db)
-            print(books_updated_successfully)
             return dict(status=200, books_stocks=book_list_db, stocks=True, total_price=total_price_car,
                         digital=contains_digital_books, books=books_updated_successfully)
         except Exception as err:
@@ -131,11 +129,10 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
     updated_book_list = []
     if success:
         response_message = "Compra finalizada! Estoque alterado com sucesso."
-
         for book_db, book_cart in zip(book_list_db, shopping_cart):
             if book_db["reserve_quantity"] >= book_cart["quantity_purchased"]:
                 updated_book_list.append({
-                    "item_id": book_db.get("_id"),
+                    "_id": book_db.get("_id"),
                     "item_quantity": book_db["item_quantity"],
                     "reserve_quantity": book_db["reserve_quantity"] - book_cart["quantity_purchased"]
                 })
@@ -152,7 +149,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
 
             if 0 < book_cart["quantity_purchased"] <= book_db["reserve_quantity"]:
                 updated_book_list.append({
-                    "item_id": book_db.get("item_id"),
+                    "_id": book_db.get("_id"),
                     "item_quantity": book_db["item_quantity"] + book_cart["quantity_purchased"],
                     "reserve_quantity": book_db["reserve_quantity"] - book_cart["quantity_purchased"]
                 })
@@ -175,6 +172,3 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
             )
     except Exception as err:
         return dict(status=500, error=err, message="Compra não finalizada.")
-
-#
-# print(check_stock([dict(item_id="60abe5359689c71ef3179535", quantity_purchased=10)]))

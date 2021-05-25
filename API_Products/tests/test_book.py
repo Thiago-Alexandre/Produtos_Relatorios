@@ -49,7 +49,11 @@ class TestBook(TestCase):
 
     @mock.patch("controllers.book_controller.read_all_books_db")
     def test_get_book_list(self, mock_read_all_books_db):
-        pass
+        mock_read_all_books_db.side_effect = [[], ["teste", "teste"], Exception("Nenhum livro encontrado!")]
+        self.assertEqual(get_book_list(), dict(status=200, message="Nenhum livro cadastrado.", result_data=[]))
+        self.assertEqual(get_book_list(), dict(status=200, result_data=["teste", "teste"]))
+        self.assertEqual(get_book_list(), dict(status=500, error="Nenhum livro encontrado!",
+                                               message="Tente novamente mais tarde."))
 
     # @mock.patch("controllers.book_controller")
     # @mock.patch("controllers.book_controller.book_db")

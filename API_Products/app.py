@@ -265,7 +265,6 @@ def verify_stock():
         return dict(status=400, error="Chave de acesso inválida.", message=default_message)
 
     response = book_controller.check_stock(body_request)
-
     try:
         log_data = generate_log_data(request, response)
         insert_log_db(log_data)
