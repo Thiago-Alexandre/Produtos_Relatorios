@@ -27,6 +27,7 @@ def populate_countries():
     try:
         db = get_db()
         country = db.country
+        country.delete_many({})
         country.insert_many(countries)
     except CollectionInvalid as error:
         print(f"PyMongo error: {error}")

@@ -70,7 +70,7 @@ def check_stock(shopping_cart: list) -> dict:
     :return:                a dict with response of request.
     """
 
-    list_ids = list(map(lambda x: x['_id'], shopping_cart))
+    list_ids = list(map(lambda x: x["item_id"], shopping_cart))
     try:
         book_list_db = get_books_by_id(*list_ids)
     except Exception as err:
@@ -120,7 +120,7 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
     :return:                a dict with response of request.
     """
 
-    list_ids = list(map(lambda x: x['_id'], shopping_cart))
+    list_ids = list(map(lambda x: x["item_id"], shopping_cart))
     try:
         book_list_db = get_books_by_id(*list_ids)
     except Exception as err:
@@ -129,7 +129,6 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
     updated_book_list = []
     if success:
         response_message = "Compra finalizada! Estoque alterado com sucesso."
-
         for book_db, book_cart in zip(book_list_db, shopping_cart):
             if book_db["reserve_quantity"] >= book_cart["quantity_purchased"]:
                 updated_book_list.append({
