@@ -4,8 +4,7 @@ from book_logs.book_logs import generate_log_data
 from book_logs.logging_db import *
 from controllers import category_controller, publisher_controller, author_controller, book_controller, \
     country_controller, language_book_controller, format_controller
-from database.auth import HOST_APP, PORT_APP
-from database.auth import KEYS
+from database.auth import HOST_APP, PORT_APP, KEYS
 
 app = Flask(__name__)
 
