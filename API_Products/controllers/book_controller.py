@@ -171,4 +171,4 @@ def finish_purchase(shopping_cart: list, success: bool) -> dict:
                 message="Compra não finalizada"
             )
     except Exception as err:
-        return dict(status=500, error=err, message="Compra não finalizada.")
+        return dict(status=500, error=err.args[0], message="Compra não finalizada.")
