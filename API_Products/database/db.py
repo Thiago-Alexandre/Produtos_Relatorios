@@ -3,7 +3,8 @@ from pymongo.errors import ConfigurationError, PyMongoError
 
 from .auth import *
 
-__DB_CONN = f"mongodb+srv://{DB_USER}:{DB_PASSWD}@{DB_HOST}"
+__DB_CONN = f"mongodb+srv://{DB_USER_NEW_CLUSTER}:{DB_PASSWD_NEW_CLUSTER}@{DB_HOST_NEW_CLUSTER}"
+# __DB_CONN = f"mongodb+srv://{DB_USER}:{DB_PASSWD}@{DB_HOST}"
 
 
 def get_conn():
