@@ -308,4 +308,4 @@ def finish_purchase():
     return response, response["status"]
 
 
-app.run(debug=True, host="192.168.0.60", port=8000)
+app.run(debug=True)
