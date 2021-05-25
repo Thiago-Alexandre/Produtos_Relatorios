@@ -208,3 +208,9 @@ def validate_book(body_request: dict, is_update=False):
         isbns = get_books_by_id(body_request["_id"], **{"isbn-10": 1, "isbn-13": 1})[0]
         if isbns["isbn-10"] != body_request["isbn-10"] or isbns["isbn-13"] != body_request["isbn-13"]:
             raise Exception("Não é possível mudar o ISBN.", "Verififque os ISBN's informados.")
+
+
+# expected = {"title", "description"}
+# received = {"title", "description", "test"}
+#
+# print(checks_dict_keys(expected, received, "erro: ", "message: "))
