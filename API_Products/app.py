@@ -4,7 +4,7 @@ from book_logs.book_logs import generate_log_data
 from book_logs.logging_db import *
 from controllers import category_controller, publisher_controller, author_controller, book_controller, \
     country_controller, language_book_controller, format_controller
-from database.auth import KEYS
+from database.auth import HOST_APP, PORT_APP, KEYS
 
 app = Flask(__name__)
 
@@ -158,7 +158,7 @@ def delete_authors():
     else:
         dict_values = request.get_json()
         response = author_controller.delete_author(dict_values)
-        
+
     return response, response["status"]
 
 
@@ -308,4 +308,9 @@ def finish_purchase():
     return response, response["status"]
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(
+        debug=True,
+        host=HOST_APP,
+        port=PORT_APP
+    )
