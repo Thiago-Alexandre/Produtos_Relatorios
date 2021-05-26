@@ -49,6 +49,9 @@ def validate_book(body_request: dict, is_update=False):
 
     if not is_update:
         expected.discard("_id")
+        if "_id" in received:
+            body_request.pop("_id")
+            received.remove("_id")
 
     # BODY REQUEST VALIDATION:
     error_message = "Invalid body request."
@@ -67,8 +70,7 @@ def validate_book(body_request: dict, is_update=False):
     else:
         for author in body_request["author"]:
             received_author = set(author.keys())
-            error_message = "Erro ao validar autor."
-            checks_dict_keys(expected_author, received_author, error_message, default_message)
+            checks_dict_keys(expected_author, received_author, "Erro ao validar autor.", default_message)
 
     # Validates the publisher information:
     if not isinstance(body_request["publisher"], dict):
@@ -77,8 +79,7 @@ def validate_book(body_request: dict, is_update=False):
 
     else:
         received_publisher = set(body_request["publisher"].keys())
-        error_message = "Erro ao validar editora."
-        checks_dict_keys(expected_publisher, received_publisher, error_message, default_message)
+        checks_dict_keys(expected_publisher, received_publisher, "Erro ao validar editora.", default_message)
 
     # Validate sizes information:
     if type(body_request["size"]) is not dict:
@@ -208,9 +209,3 @@ def validate_book(body_request: dict, is_update=False):
         isbns = get_books_by_id(body_request["_id"], **{"isbn-10": 1, "isbn-13": 1})[0]
         if isbns["isbn-10"] != body_request["isbn-10"] or isbns["isbn-13"] != body_request["isbn-13"]:
             raise Exception("Não é possível mudar o ISBN.", "Verififque os ISBN's informados.")
-
-
-# expected = {"title", "description"}
-# received = {"title", "description", "test"}
-#
-# print(checks_dict_keys(expected, received, "erro: ", "message: "))
