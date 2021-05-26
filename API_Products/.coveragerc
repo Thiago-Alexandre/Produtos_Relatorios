@@ -1,0 +1,13 @@
+[run]
+omit =
+    app.py
+    __init__.py
+    additionals/*
+    book_logs/*
+    database/*
+    controllers/__init__.py
+    controllers/language_book_controller.py
+    controllers/format_controller.py
+    controllers/country_controller.py
+    controllers/utils.py
+    tests/*
