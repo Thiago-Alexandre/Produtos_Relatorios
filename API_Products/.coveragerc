@@ -9,4 +9,5 @@ omit =
     controllers/language_book_controller.py
     controllers/format_controller.py
     controllers/country_controller.py
+    controllers/utils.py
     tests/*
